@@ -4,31 +4,20 @@
 
 ### Sistema de Gestão de Oficina Mecânica
 
-**Plataforma Full Stack para gerenciamento de clientes, veículos, ordens de serviço, orçamentos, estoque e operações de uma oficina mecânica.**
+**Plataforma Full Stack para gerenciamento de clientes, veículos, ordens de serviço, orçamentos, estoque e operações de oficinas mecânicas.**
 
-<br />
+<br>
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge\&logo=openjdk\&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-6DB33F?style=for-the-badge\&logo=springboot\&logoColor=white)
-![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge\&logo=react\&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?style=for-the-badge\&logo=springboot\&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge\&logo=react\&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge\&logo=postgresql\&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-24.0.0-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-24-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
 
-<br />
+<br>
 
-![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=flat-square\&logo=jsonwebtokens\&logoColor=white)
-![Flyway](https://img.shields.io/badge/Flyway-Migrations-CC0200?style=flat-square\&logo=flyway\&logoColor=white)
-![Swagger](https://img.shields.io/badge/OpenAPI-Documentation-85EA2D?style=flat-square\&logo=swagger\&logoColor=black)
-![WebSocket](https://img.shields.io/badge/WebSocket-Realtime-010101?style=flat-square\&logo=socketdotio\&logoColor=white)
-
-<br />
-
-[📋 Funcionalidades](#-funcionalidades) •
-[🏗️ Arquitetura](#️-arquitetura) •
-[🚀 Instalação](#-como-executar) •
-[📡 API](#-api-rest) •
-[🧪 Testes](#-testes)
+**Spring Security + JWT · Flyway · OpenAPI · WebSocket · JPA · REST**
 
 </div>
 
@@ -36,353 +25,212 @@
 
 ## 📋 Sobre o Projeto
 
-O **AutoCare** é uma aplicação **Full Stack** desenvolvida para digitalizar e centralizar a gestão operacional de oficinas mecânicas.
+O **AutoCare** é um sistema Full Stack desenvolvido para digitalizar a operação de oficinas mecânicas.
 
-A plataforma acompanha todo o ciclo de atendimento, desde o cadastro do cliente e veículo até diagnóstico, orçamento, aprovação, execução dos serviços, controle de peças e finalização da ordem de serviço.
+A aplicação centraliza o gerenciamento de **clientes, veículos, mecânicos, ordens de serviço, orçamentos, peças e estoque**, acompanhando o processo desde o diagnóstico até a finalização do serviço.
 
-O projeto foi desenvolvido com foco em **boas práticas de desenvolvimento**, **segurança**, **arquitetura modular**, **persistência relacional**, **controle de acesso**, **comunicação em tempo real** e **escalabilidade**.
+O projeto foi desenvolvido com foco em **arquitetura modular, segurança, boas práticas, regras de negócio, persistência relacional e comunicação em tempo real**.
 
-### 🎯 Fluxo Principal
+### 🔄 Fluxo principal
 
-```mermaid
-flowchart LR
-    A[👤 Cliente] --> B[🚗 Veículo]
-    B --> C[🔍 Diagnóstico]
-    C --> D[💰 Orçamento]
-    D --> E{Aprovação}
-    E -->|Aprovado| F[🔧 Ordem de Serviço]
-    E -->|Recusado| G[❌ Orçamento Recusado]
-    F --> H[🛠️ Serviços + Peças]
-    H --> I[📦 Atualização do Estoque]
-    I --> J[✅ Finalização]
-    J --> K[📚 Histórico do Veículo]
+```text
+Cliente
+   ↓
+Veículo
+   ↓
+Diagnóstico
+   ↓
+Orçamento
+   ↓
+Aprovação
+   ↓
+Ordem de Serviço
+   ↓
+Serviços + Peças
+   ↓
+Estoque
+   ↓
+Finalização
+   ↓
+Histórico
 ```
 
 ---
 
 # ✨ Funcionalidades
 
-## 👥 Gestão de Clientes
+### 👥 Clientes e Veículos
 
-* Cadastro completo de clientes
+* Cadastro e gerenciamento de clientes
+* Cadastro de veículos vinculados
 * Busca por nome e CPF
-* Visualização de veículos vinculados
-* Histórico de serviços realizados
-* Ativação e desativação de clientes
-* Soft delete
-
-## 🚗 Gestão de Veículos
-
-* Cadastro de veículos vinculados a clientes
-* Validação de placas no padrão Mercosul
+* Validação de placas Mercosul
 * Controle de quilometragem
-* Histórico de manutenções
-* Consulta de veículos por cliente
+* Histórico de serviços
 
-## 🔧 Ordens de Serviço
+### 🔧 Ordens de Serviço
 
-* Criação e gerenciamento de ordens de serviço
-* Máquina de estados com transições controladas
+* Criação e gerenciamento de OS
+* Diagnóstico e registro de problemas
 * Atribuição de mecânicos
-* Registro de diagnóstico
-* Registro de problemas identificados
-* Controle dos serviços executados
-* Controle das peças utilizadas
-
-### 🔄 Estados da Ordem de Serviço
+* Controle de serviços e peças
+* Máquina de estados com transições controladas
 
 ```text
 CRIADA
-   ↓
+  ↓
 EM_DIAGNOSTICO
-   ↓
+  ↓
 AGUARDANDO_APROVACAO
-   ↓
+  ↓
 APROVADA
-   ↓
+  ↓
 EM_EXECUCAO
-   ↓
+  ↓
 FINALIZADA
 ```
 
-As transições são validadas pela aplicação para evitar alterações de estado inconsistentes.
+### 💰 Orçamentos
 
----
-
-## 💰 Orçamentos
-
-* Criação de orçamentos vinculados às ordens de serviço
-* Inclusão de serviços e peças
-* Cálculo dos valores
-* Aprovação pelo cliente
-* Recusa do orçamento
+* Criação de orçamentos
+* Serviços e peças
+* Cálculo automático de valores
+* Aprovação ou recusa
 * Controle de status
 
-### Status
-
-```text
-PENDENTE
-APROVADO
-RECUSADO
-```
-
----
-
-## 👨‍🔧 Gestão de Mecânicos
-
-* Cadastro de mecânicos
-* Definição de especialidades
-* Controle de disponibilidade
-* Atribuição às ordens de serviço
-* Histórico de serviços realizados
-
----
-
-## 🔩 Controle de Estoque
+### 🔩 Estoque
 
 * Cadastro de peças
-* Código único por peça
-* Controle de quantidade disponível
-* Definição de estoque mínimo
-* Entrada de peças
-* Saída de peças
-* Ajustes de estoque
+* Entrada, saída e ajustes
+* Estoque mínimo
+* Alertas de estoque baixo
 * Histórico de movimentações
-* Auditoria das movimentações
+* Auditoria
 * Validação contra estoque insuficiente
 * Operações transacionais
 
-### Tipos de Movimentação
+### 📊 Dashboard
 
-| Tipo      | Descrição                   |
-| --------- | --------------------------- |
-| `ENTRADA` | Entrada de peças no estoque |
-| `SAIDA`   | Saída de peças              |
-| `AJUSTE`  | Correção manual do estoque  |
-
----
-
-## 📊 Dashboard
-
-Dashboard operacional com:
-
-* Indicadores gerais
-* Métricas de operação
+* Indicadores operacionais
 * Faturamento mensal
 * Ranking de mecânicos
-* Alertas de estoque baixo
+* Alertas de estoque
 * Atualizações em tempo real
-* Integração com WebSocket
 
----
+### 🔐 Segurança
 
-## 🔐 Autenticação e Autorização
-
-O sistema utiliza **Spring Security + JWT** para autenticação e controle de acesso baseado em funções.
-
-### Perfis de Acesso
-
-| Perfil         | Permissões                                             |
-| -------------- | ------------------------------------------------------ |
-| `ADMIN`        | Acesso completo ao sistema                             |
-| `MANAGER`      | Dashboard, relatórios, ordens e estoque                |
-| `RECEPTIONIST` | Clientes, veículos, ordens e orçamentos                |
-| `MECHANIC`     | Ordens atribuídas, diagnóstico e atualização de status |
-
-### Recursos de Segurança
-
-* JWT Authentication
-* Refresh Token
+* Spring Security
+* JWT + Refresh Token
 * Role-Based Access Control
-* Autorização por perfil
 * Proteção de endpoints
 * Validação de dados
-* Controle de acesso às operações
+* Controle de acesso por perfil
 
----
+| Perfil         | Acesso                              |
+| -------------- | ----------------------------------- |
+| `ADMIN`        | Acesso completo                     |
+| `MANAGER`      | Dashboard, relatórios, OS e estoque |
+| `RECEPTIONIST` | Clientes, veículos, OS e orçamentos |
+| `MECHANIC`     | OS atribuídas e diagnóstico         |
 
-## 📄 Relatórios
+### 📄 Relatórios e Tempo Real
 
-Geração de documentos em PDF para:
-
-* Orçamentos
-* Ordens de serviço
-* Notas de serviço
-
----
-
-## 🔔 Comunicação em Tempo Real
-
-O AutoCare utiliza **WebSocket** para comunicação em tempo real.
-
-Entre os eventos suportados:
-
-* Atualização de status de ordens
-* Criação de orçamentos
-* Atualização do dashboard
+* Geração de documentos PDF
+* Relatórios de orçamento e OS
+* WebSocket para atualizações em tempo real
 * Notificações operacionais
+* Atualização de status e dashboard
 
 ---
 
 # 🏗️ Arquitetura
 
-O projeto foi estruturado separando claramente **backend** e **frontend**, permitindo evolução e implantação independentes.
-
 ```mermaid
-flowchart TB
-    CLIENT[🌐 React + TypeScript]
-
-    CLIENT -->|HTTP / REST| API[☕ Spring Boot API]
-    CLIENT <-->|WebSocket| WS[🔔 WebSocket]
-
-    API --> SECURITY[🔐 Spring Security + JWT]
-    API --> SERVICE[⚙️ Application Services]
-    SERVICE --> REPOSITORY[🗄️ Spring Data JPA]
-    REPOSITORY --> DB[(🐘 PostgreSQL)]
-
-    API --> FLYWAY[🛠️ Flyway]
-    FLYWAY --> DB
-
-    API --> REPORT[📄 PDF Reports]
+flowchart LR
+    A[React + TypeScript] -->|REST / HTTP| B[Spring Boot]
+    A <-->|WebSocket| B
+    B --> C[Spring Security + JWT]
+    B --> D[Services]
+    D --> E[Spring Data JPA]
+    E --> F[(PostgreSQL)]
+    B --> G[Flyway]
+    B --> H[PDF Reports]
 ```
 
 ### Organização do Backend
 
-O backend segue uma organização modular por domínio:
+Arquitetura modular orientada por domínio:
 
 ```text
 com.autocare
-│
 ├── config
-│
 ├── shared
-│
 ├── auth
-│
 ├── client
-│
 ├── vehicle
-│
 ├── mechanic
-│
 ├── serviceorder
-│
 ├── budget
-│
 ├── inventory
-│
 ├── dashboard
-│
 └── report
 ```
 
-Essa abordagem facilita:
-
-* Manutenção
-* Separação de responsabilidades
-* Evolução dos módulos
-* Testabilidade
-* Organização do domínio
+Essa estrutura favorece **separação de responsabilidades, manutenção, testabilidade e evolução do sistema**.
 
 ---
 
-# 🛠️ Stack Tecnológica
+# 🛠️ Stack
 
 ## Backend
 
-| Tecnologia        |  Versão | Finalidade              |
-| ----------------- | ------: | ----------------------- |
-| Java              |      21 | Linguagem principal     |
-| Spring Boot       |   3.2.0 | Framework da aplicação  |
-| Spring Security   |   3.2.0 | Segurança e autorização |
-| Spring Data JPA   |   3.2.0 | Persistência e ORM      |
-| PostgreSQL        |      16 | Banco de dados          |
-| Flyway            |  10.0.0 | Migrações               |
-| JWT               |  0.11.5 | Autenticação            |
-| Lombok            | 1.18.30 | Redução de boilerplate  |
-| OpenAPI / Swagger |   2.3.0 | Documentação da API     |
-| JUnit 5           |  5.10.0 | Testes                  |
-| Mockito           |   5.6.0 | Mocking                 |
-| Docker            |  24.0.0 | Containerização         |
+| Tecnologia        | Finalidade                 |
+| ----------------- | -------------------------- |
+| Java 21           | Linguagem principal        |
+| Spring Boot 3.2   | Framework                  |
+| Spring Security   | Autenticação e autorização |
+| Spring Data JPA   | Persistência               |
+| PostgreSQL 16     | Banco de dados             |
+| Flyway            | Migrações                  |
+| JWT               | Autenticação               |
+| OpenAPI / Swagger | Documentação               |
+| JUnit 5 + Mockito | Testes                     |
+| Docker            | Containerização            |
 
 ## Frontend
 
-| Tecnologia      | Versão | Finalidade              |
-| --------------- | -----: | ----------------------- |
-| React           | 18.2.0 | Interface               |
-| TypeScript      |  5.0.0 | Tipagem estática        |
-| Vite            |  4.4.0 | Build e desenvolvimento |
-| Tailwind CSS    |  3.3.0 | Estilização             |
-| React Router    | 6.20.0 | Roteamento              |
-| React Hook Form | 7.48.0 | Formulários             |
-| TanStack Query  | 5.12.0 | Estado assíncrono       |
-| Axios           |  1.6.0 | HTTP Client             |
-| Recharts        | 2.10.0 | Visualização de dados   |
-| Zod             | 3.22.0 | Validação               |
-| React Hot Toast |  2.4.0 | Notificações            |
+| Tecnologia     | Finalidade        |
+| -------------- | ----------------- |
+| React 18       | Interface         |
+| TypeScript 5   | Tipagem           |
+| Vite           | Build             |
+| Tailwind CSS   | Estilização       |
+| React Router   | Roteamento        |
+| TanStack Query | Estado assíncrono |
+| Axios          | HTTP Client       |
+| Recharts       | Gráficos          |
+| Zod            | Validação         |
 
 ---
 
-# 📁 Estrutura do Projeto
+# 📁 Estrutura
 
 ```text
 autocare/
-│
 ├── backend/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/autocare/
-│   │   │   │   ├── config/
-│   │   │   │   ├── shared/
-│   │   │   │   ├── auth/
-│   │   │   │   ├── client/
-│   │   │   │   ├── vehicle/
-│   │   │   │   ├── mechanic/
-│   │   │   │   ├── serviceorder/
-│   │   │   │   ├── budget/
-│   │   │   │   ├── inventory/
-│   │   │   │   ├── dashboard/
-│   │   │   │   ├── report/
-│   │   │   │   └── AutoCareApplication.java
-│   │   │   │
-│   │   │   └── resources/
-│   │   │       ├── application.yml
-│   │   │       ├── application-dev.yml
-│   │   │       └── db/migration/
-│   │   │
-│   │   └── test/
-│   │
+│   ├── src/main/java/com/autocare/
+│   ├── src/main/resources/
+│   ├── src/test/
 │   ├── Dockerfile
-│   ├── pom.xml
-│   └── .env.example
+│   └── pom.xml
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   │   ├── common/
-│   │   │   ├── auth/
-│   │   │   ├── dashboard/
-│   │   │   ├── clients/
-│   │   │   ├── vehicles/
-│   │   │   ├── mechanics/
-│   │   │   ├── serviceOrders/
-│   │   │   ├── budgets/
-│   │   │   └── inventory/
-│   │   ├── contexts/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   ├── types/
-│   │   └── utils/
-│   │
 │   ├── Dockerfile
-│   ├── package.json
-│   └── vite.config.ts
+│   └── package.json
 │
 ├── docker-compose.yml
 ├── docker-compose.prod.yml
-├── .gitignore
 └── README.md
 ```
 
@@ -390,53 +238,42 @@ autocare/
 
 # 🚀 Como Executar
 
-## Pré-requisitos
+## 🐳 Docker
 
-### Opção recomendada
+### Pré-requisitos
 
 * Docker
 * Docker Compose
 
-### Desenvolvimento local
-
-* Java 21+
-* Maven 3.9+
-* Node.js 20+
-* PostgreSQL 16+
-
----
-
-## 🐳 Docker
-
-Clone o projeto:
+Clone o repositório:
 
 ```bash
 git clone https://github.com/adanwilliamdev/autocare.git
 cd autocare
 ```
 
-Inicie os containers:
+Inicie a aplicação:
 
 ```bash
 docker-compose up -d
 ```
 
-A aplicação estará disponível em:
+Serviços:
 
-| Serviço  | URL                                       |
+| Serviço  | Endereço                                  |
 | -------- | ----------------------------------------- |
 | Frontend | http://localhost                          |
 | Backend  | http://localhost:8080                     |
 | API      | http://localhost:8080/api                 |
 | Swagger  | http://localhost:8080/api/swagger-ui.html |
 
-Para acompanhar os logs:
+Logs:
 
 ```bash
 docker-compose logs -f
 ```
 
-Para parar os containers:
+Parar:
 
 ```bash
 docker-compose down
@@ -446,71 +283,31 @@ docker-compose down
 
 # 💻 Desenvolvimento Local
 
-## Backend
+### Backend
 
-Entre no diretório:
+Requisitos:
+
+* Java 21+
+* Maven 3.9+
+* PostgreSQL 16+
 
 ```bash
 cd backend
-```
 
-Configure as variáveis de ambiente:
-
-```bash
-cp .env.example .env
-```
-
-Compile o projeto:
-
-```bash
 ./mvnw clean install
-```
-
-Execute a aplicação:
-
-```bash
 ./mvnw spring-boot:run
 ```
 
-### PostgreSQL via Docker
+### Frontend
 
-Caso queira executar somente o banco através do Docker:
+Requisitos:
 
-```bash
-docker run -d \
-  --name autocare-postgres \
-  -e POSTGRES_DB=autocare \
-  -e POSTGRES_USER=autocare \
-  -e POSTGRES_PASSWORD=autocare123 \
-  -p 5432:5432 \
-  postgres:16-alpine
-```
-
----
-
-## Frontend
-
-Entre no diretório:
+* Node.js 20+
 
 ```bash
 cd frontend
-```
 
-Instale as dependências:
-
-```bash
 npm install
-```
-
-Configure as variáveis de ambiente:
-
-```bash
-cp .env.example .env
-```
-
-Execute o servidor de desenvolvimento:
-
-```bash
 npm run dev
 ```
 
@@ -518,95 +315,66 @@ npm run dev
 
 # 🔑 Credenciais de Demonstração
 
-> ⚠️ **Atenção:** as credenciais abaixo são destinadas exclusivamente ao ambiente de desenvolvimento/demonstração. Nunca utilize senhas padrão em produção.
+> ⚠️ Disponíveis apenas para desenvolvimento/demonstração.
 
-| Email                       | Senha      | Perfil         |
-| --------------------------- | ---------- | -------------- |
-| `admin@autocare.com`        | `admin123` | `ADMIN`        |
-| `manager@autocare.com`      | `admin123` | `MANAGER`      |
-| `receptionist@autocare.com` | `admin123` | `RECEPTIONIST` |
-| `mechanic@autocare.com`     | `admin123` | `MECHANIC`     |
+| Usuário                     | Senha      | Perfil       |
+| --------------------------- | ---------- | ------------ |
+| `admin@autocare.com`        | `admin123` | ADMIN        |
+| `manager@autocare.com`      | `admin123` | MANAGER      |
+| `receptionist@autocare.com` | `admin123` | RECEPTIONIST |
+| `mechanic@autocare.com`     | `admin123` | MECHANIC     |
 
 ---
 
 # 📡 API REST
 
-A API é organizada por recursos de domínio e segue os princípios REST.
+A API segue princípios REST e é documentada com OpenAPI/Swagger.
 
-## 🔐 Autenticação
+### Principais recursos
 
-| Método | Endpoint             | Descrição          |
-| ------ | -------------------- | ------------------ |
-| `POST` | `/api/auth/login`    | Autenticar usuário |
-| `POST` | `/api/auth/register` | Registrar usuário  |
+```text
+/api/auth
+/api/clients
+/api/vehicles
+/api/mechanics
+/api/service-orders
+/api/budgets
+/api/inventory
+/api/dashboard
+```
 
-## 👥 Clientes
+### Exemplos
 
-| Método   | Endpoint                     | Descrição         |
-| -------- | ---------------------------- | ----------------- |
-| `GET`    | `/api/clients`               | Listar clientes   |
-| `GET`    | `/api/clients/{id}`          | Buscar cliente    |
-| `GET`    | `/api/clients/search?name=`  | Buscar por nome   |
-| `POST`   | `/api/clients`               | Criar cliente     |
-| `PUT`    | `/api/clients/{id}`          | Atualizar cliente |
-| `DELETE` | `/api/clients/{id}`          | Excluir cliente   |
-| `PATCH`  | `/api/clients/{id}/activate` | Ativar cliente    |
+```http
+POST   /api/auth/login
 
-## 🚗 Veículos
+GET    /api/clients
+POST   /api/clients
+PUT    /api/clients/{id}
 
-| Método   | Endpoint                          | Descrição               |
-| -------- | --------------------------------- | ----------------------- |
-| `GET`    | `/api/vehicles`                   | Listar veículos         |
-| `GET`    | `/api/vehicles/{id}`              | Buscar veículo          |
-| `GET`    | `/api/vehicles/client/{clientId}` | Veículos do cliente     |
-| `POST`   | `/api/vehicles`                   | Criar veículo           |
-| `PUT`    | `/api/vehicles/{id}`              | Atualizar veículo       |
-| `PATCH`  | `/api/vehicles/{id}/mileage`      | Atualizar quilometragem |
-| `DELETE` | `/api/vehicles/{id}`              | Excluir veículo         |
+GET    /api/vehicles
+POST   /api/vehicles
 
-## 🔧 Ordens de Serviço
+GET    /api/service-orders
+POST   /api/service-orders
+PATCH  /api/service-orders/{id}/status
 
-| Método  | Endpoint                                | Descrição          |
-| ------- | --------------------------------------- | ------------------ |
-| `GET`   | `/api/service-orders`                   | Listar ordens      |
-| `GET`   | `/api/service-orders/{id}`              | Buscar ordem       |
-| `GET`   | `/api/service-orders/client/{clientId}` | Ordens do cliente  |
-| `GET`   | `/api/service-orders/status/{status}`   | Filtrar por status |
-| `POST`  | `/api/service-orders`                   | Criar ordem        |
-| `PATCH` | `/api/service-orders/{id}/status`       | Atualizar status   |
-| `PATCH` | `/api/service-orders/{id}/mechanic`     | Atribuir mecânico  |
+GET    /api/budgets
+POST   /api/budgets
+PATCH  /api/budgets/{id}/approve
 
-## 💰 Orçamentos
+GET    /api/inventory/parts
+POST   /api/inventory/parts
+POST   /api/inventory/parts/{id}/add-stock
 
-| Método  | Endpoint                         | Descrição             |
-| ------- | -------------------------------- | --------------------- |
-| `GET`   | `/api/budgets`                   | Listar orçamentos     |
-| `GET`   | `/api/budgets/{id}`              | Buscar orçamento      |
-| `GET`   | `/api/budgets/client/{clientId}` | Orçamentos do cliente |
-| `GET`   | `/api/budgets/status/{status}`   | Filtrar por status    |
-| `POST`  | `/api/budgets`                   | Criar orçamento       |
-| `PATCH` | `/api/budgets/{id}/approve`      | Aprovar orçamento     |
-| `PATCH` | `/api/budgets/{id}/reject`       | Recusar orçamento     |
+GET    /api/dashboard/stats
+```
 
-## 🔩 Estoque
+### Swagger
 
-| Método   | Endpoint                                 | Descrição               |
-| -------- | ---------------------------------------- | ----------------------- |
-| `GET`    | `/api/inventory/parts`                   | Listar peças            |
-| `GET`    | `/api/inventory/parts/low-stock`         | Peças com estoque baixo |
-| `GET`    | `/api/inventory/parts/{id}`              | Buscar peça             |
-| `GET`    | `/api/inventory/parts/{id}/movements`    | Movimentações           |
-| `POST`   | `/api/inventory/parts`                   | Criar peça              |
-| `PUT`    | `/api/inventory/parts/{id}`              | Atualizar peça          |
-| `DELETE` | `/api/inventory/parts/{id}`              | Excluir peça            |
-| `POST`   | `/api/inventory/parts/{id}/add-stock`    | Adicionar estoque       |
-| `POST`   | `/api/inventory/parts/{id}/remove-stock` | Remover estoque         |
-
-## 📊 Dashboard
-
-| Método | Endpoint               | Descrição                 |
-| ------ | ---------------------- | ------------------------- |
-| `GET`  | `/api/dashboard/stats` | Estatísticas do dashboard |
+```text
+http://localhost:8080/api/swagger-ui.html
+```
 
 ---
 
@@ -624,274 +392,95 @@ erDiagram
     PART ||--o{ INVENTORY_MOVEMENT : generates
 ```
 
-### Principais relacionamentos
-
-```text
-USER
- └── ROLE
-
-CLIENT
- └── VEHICLE
-      └── SERVICE_ORDER
-           ├── BUDGET
-           ├── SERVICE_ORDER_SERVICE
-           └── SERVICE_ORDER_PART
-                └── PART
-                     └── INVENTORY_MOVEMENT
-```
-
 ---
 
 # 🧪 Testes
 
-## Backend
+### Backend
 
 ```bash
 cd backend
-
 ./mvnw test
 ```
 
-Para executar com relatório detalhado:
-
-```bash
-./mvnw test -DtrimStackTrace=false
-```
-
-## Frontend
-
-```bash
-cd frontend
-
-npm test
-```
-
-A estratégia de testes contempla principalmente:
+Os testes abrangem principalmente:
 
 * Regras de negócio
 * Serviços
 * Validações
 * Autenticação
-* Controle de acesso
+* Autorização
 * Integrações críticas
 
----
-
-# 📦 Build para Produção
-
-## Backend
-
-```bash
-cd backend
-
-./mvnw clean package -DskipTests
-```
-
-O artefato será gerado no diretório:
-
-```text
-backend/target/
-```
-
-## Frontend
+### Frontend
 
 ```bash
 cd frontend
+npm test
+```
 
+---
+
+# 📦 Build
+
+### Backend
+
+```bash
+cd backend
+./mvnw clean package -DskipTests
+```
+
+### Frontend
+
+```bash
+cd frontend
 npm run build
 ```
 
-Os arquivos de produção serão gerados em:
-
-```text
-frontend/dist/
-```
-
 ---
 
-# 🐳 Produção com Docker
+# 📌 Boas Práticas
 
-O projeto possui configuração específica para ambiente produtivo:
+O projeto aplica conceitos utilizados no desenvolvimento profissional:
 
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-Para encerrar:
-
-```bash
-docker-compose -f docker-compose.prod.yml down
-```
-
----
-
-# 📚 Documentação da API
-
-Após iniciar o backend, a documentação interativa pode ser acessada através do **Swagger UI**:
-
-```text
-http://localhost:8080/api/swagger-ui.html
-```
-
-A documentação permite visualizar:
-
-* Endpoints
-* Métodos HTTP
-* Parâmetros
-* Schemas
-* Respostas
-* Códigos HTTP
-* Autenticação
-
----
-
-# 🔄 Fluxo de Negócio
-
-O fluxo principal da aplicação pode ser resumido em:
-
-```text
-┌───────────────┐
-│    CLIENTE    │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│    VEÍCULO    │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│  DIAGNÓSTICO  │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│   ORÇAMENTO   │
-└───────┬───────┘
-        ↓
-   ┌────┴────┐
-   │         │
-APROVADO   RECUSADO
-   │
-   ↓
-┌───────────────┐
-│      OS       │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│ SERVIÇOS/PEÇAS│
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│    ESTOQUE    │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│  FINALIZAÇÃO  │
-└───────┬───────┘
-        ↓
-┌───────────────┐
-│   HISTÓRICO   │
-└───────────────┘
-```
-
----
-
-# 🤝 Contribuição
-
-Contribuições são bem-vindas.
-
-### 1. Faça um Fork
-
-```bash
-git clone https://github.com/seu-usuario/autocare.git
-```
-
-### 2. Crie uma branch
-
-```bash
-git checkout -b feature/minha-feature
-```
-
-### 3. Faça suas alterações
-
-```bash
-git add .
-git commit -m "feat: adiciona nova funcionalidade"
-```
-
-### 4. Envie para o repositório
-
-```bash
-git push origin feature/minha-feature
-```
-
-### 5. Abra um Pull Request
-
-Descreva claramente:
-
-* O problema resolvido
-* A solução implementada
-* Alterações realizadas
-* Testes executados
-
----
-
-# 📌 Boas Práticas Adotadas
-
-O projeto busca aplicar princípios e práticas comuns no desenvolvimento profissional:
-
-* **Clean Code**
-* **SOLID**
-* **RESTful API**
-* **Domain-oriented organization**
-* **Separation of Concerns**
-* **DTOs**
-* **Validação de dados**
-* **Tratamento global de exceções**
-* **Transações**
-* **Database migrations**
-* **JWT Authentication**
-* **RBAC**
-* **Testes automatizados**
-* **Containerização com Docker**
-* **Documentação com OpenAPI**
-* **Comunicação em tempo real com WebSocket**
+* Clean Code
+* SOLID
+* RESTful API
+* DTOs
+* Separation of Concerns
+* Arquitetura modular por domínio
+* Validação de dados
+* Tratamento global de exceções
+* Transações
+* Database Migrations
+* JWT + RBAC
+* Testes automatizados
+* Docker
+* OpenAPI
+* WebSocket
 
 ---
 
 # 🗺️ Roadmap
 
-Possíveis evoluções do projeto:
-
-* [ ] Sistema de agendamento de serviços
-* [ ] Integração com gateway de pagamentos
-* [ ] Envio de notificações por WhatsApp
-* [ ] Histórico financeiro completo
-* [ ] Controle de fornecedores
-* [ ] Gestão de compras
+* [ ] Sistema de agendamento
+* [ ] Integração com pagamentos
+* [ ] Notificações via WhatsApp
+* [ ] Gestão de fornecedores e compras
 * [ ] Indicadores financeiros avançados
-* [ ] Auditoria completa de operações
-* [ ] Testes de integração
-* [ ] Testes E2E
+* [ ] Auditoria completa
+* [ ] Testes de integração e E2E
 * [ ] CI/CD com GitHub Actions
-* [ ] Observabilidade com métricas e logs
-* [ ] Deploy em cloud
-
----
-
-# 📄 Licença
-
-Este projeto está licenciado sob a **MIT License**.
-
-Consulte o arquivo [`LICENSE`](LICENSE) para mais informações.
+* [ ] Observabilidade
+* [ ] Deploy em Cloud
 
 ---
 
 # 👨‍💻 Autor
 
-Desenvolvido por **Adan William** como projeto de portfólio com foco em **Java Backend, Spring Boot, APIs REST, React e arquitetura Full Stack**.
+Desenvolvido por **Adan William** como projeto de portfólio com foco em:
 
-### Tecnologias em destaque
-
-`Java` `Spring Boot` `Spring Security` `PostgreSQL` `React` `TypeScript` `Docker` `JWT` `WebSocket`
+**Java · Spring Boot · Backend · APIs REST · React · TypeScript · PostgreSQL · Docker**
 
 ---
 
@@ -901,6 +490,6 @@ Desenvolvido por **Adan William** como projeto de portfólio com foco em **Java 
 
 **Gestão inteligente para oficinas mecânicas.**
 
-⭐ Se este projeto foi útil ou interessante, considere deixar uma estrela no repositório.
+⭐ Se o projeto foi útil ou interessante, considere deixar uma estrela no repositório.
 
 </div>
