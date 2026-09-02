@@ -1,5 +1,6 @@
 package com.autocare.vehicle.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +23,6 @@ public class VehicleResponseDTO {
     private String clientId;
     private String clientName;
     private LocalDateTime createdAt;
+    @JsonProperty("isActive")
     private boolean isActive;
 }

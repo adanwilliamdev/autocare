@@ -1,5 +1,6 @@
 package com.autocare.inventory.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,9 @@ public class PartResponseDTO {
     private BigDecimal salePrice;
     private Integer stockQuantity;
     private Integer minimumStock;
+    @JsonProperty("isLowStock")
     private boolean isLowStock;
     private LocalDateTime createdAt;
+    @JsonProperty("isActive")
     private boolean isActive;
 }

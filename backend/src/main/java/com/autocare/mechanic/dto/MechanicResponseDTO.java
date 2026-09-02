@@ -1,5 +1,6 @@
 package com.autocare.mechanic.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,9 @@ public class MechanicResponseDTO {
     private String name;
     private String specialty;
     private String phone;
+    @JsonProperty("isAvailable")
     private boolean isAvailable;
     private LocalDateTime createdAt;
+    @JsonProperty("isActive")
     private boolean isActive;
 }
