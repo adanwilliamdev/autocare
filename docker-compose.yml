@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: autocare-postgres
+    environment:
+      POSTGRES_DB: autocare
+      POSTGRES_USER: autocare
+      POSTGRES_PASSWORD: autocare123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autocare-backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/autocare
+      DB_USERNAME: autocare
+      DB_PASSWORD: autocare123
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
