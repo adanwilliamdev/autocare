@@ -25,33 +25,33 @@ public class DashboardStatsDTO {
     private List<MonthlyRevenueDTO> monthlyRevenueChart;
     private List<TopMechanicDTO> topMechanics;
     private List<MostUsedPartDTO> mostUsedParts;
-}
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public static class MonthlyRevenueDTO {
-    private String month;
-    private BigDecimal amount;
-}
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MonthlyRevenueDTO {
+        private String month;
+        private BigDecimal amount;
+    }
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public static class TopMechanicDTO {
-    private String mechanicId;
-    private String mechanicName;
-    private Long completedOrders;
-}
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TopMechanicDTO {
+        private String mechanicId;
+        private String mechanicName;
+        private Long completedOrders;
+    }
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public static class MostUsedPartDTO {
-    private String partId;
-    private String partName;
-    private Long usageCount;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MostUsedPartDTO {
+        private String partId;
+        private String partName;
+        private Long usageCount;
+    }
 }
