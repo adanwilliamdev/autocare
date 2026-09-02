@@ -32,4 +32,35 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
 
-        return Login
+        return LoginResponse.builder()
+                .token(token)
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
+    }
+
+    public void register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Role role;
+        try {
+            role = Role.valueOf(request.getRole().toUpperCase());
+        } catch (Exception e) {
+            role = Role.RECEPTIONIST;
+        }
+
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(role)
+                .isActive(true)
+                .build();
+
+        userRepository.save(user);
+    }
+}
