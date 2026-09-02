@@ -411,7 +411,7 @@ autocare/
 Clone o projeto:
 
 ```bash
-git clone https://github.com/seu-usuario/autocare.git
+git clone https://github.com/adanwilliamdev/autocare.git
 cd autocare
 ```
 
