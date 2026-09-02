@@ -12,11 +12,21 @@ import Input from '@/components/common/Forms/Input'
 import Select from '@/components/common/Forms/Select'
 
 const vehicleSchema = z.object({
-  plate: z.string().min(1, 'Placa é obrigatória'),
+  plate: z
+    .string()
+    .min(1, 'Placa é obrigatória')
+    .transform((val) => val.toUpperCase().replace(/\s|-/g, ''))
+    .refine(
+      (val) => /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(val),
+      'Placa inválida. Formato: ABC1D23 ou ABC1234'
+    ),
   brand: z.string().min(1, 'Marca é obrigatória'),
   model: z.string().min(1, 'Modelo é obrigatório'),
   year: z.coerce.number().min(1900, 'Ano inválido'),
-  mileage: z.coerce.number().optional(),
+  mileage: z.preprocess(
+    (val) => (val === '' || val === undefined || val === null ? undefined : val),
+    z.coerce.number().min(0, 'Quilometragem deve ser positiva').optional()
+  ),
   fuelType: z.string().optional(),
   clientId: z.string().min(1, 'Cliente é obrigatório'),
 })
