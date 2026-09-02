@@ -4,6 +4,7 @@ export * from './vehicle'
 export * from './mechanic'
 export * from './serviceOrder'
 export * from './inventory'
+export * from './budget'
 
 export interface DashboardStats {
   totalClients: number

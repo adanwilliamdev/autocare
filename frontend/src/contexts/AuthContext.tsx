@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { login as apiLogin, logout as apiLogout } from '@/api/auth'
 import { User, LoginCredentials } from '@/types/auth'
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import Layout from '@/components/common/Layout/Layout'
@@ -74,6 +74,13 @@ export default function ClientsPage() {
         }
       },
       className: 'text-red-600 hover:text-red-800',
+    },
+    {
+      label: 'Ativar',
+      onClick: (client: Client) => {
+        activateMutation.mutate(client.id)
+      },
+      className: 'text-green-600 hover:text-green-800',
     },
   ]
 
