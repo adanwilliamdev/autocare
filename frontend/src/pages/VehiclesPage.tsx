@@ -16,7 +16,7 @@ export default function VehiclesPage() {
   })
 
   const columns = [
-    { key: 'plate', label: 'Placa' },
+    { key: 'plate', label: 'Placa', render: (value: string) => <span className="font-mono text-graphite-800">{value}</span> },
     { key: 'brand', label: 'Marca' },
     { key: 'model', label: 'Modelo' },
     { key: 'year', label: 'Ano' },
@@ -26,9 +26,8 @@ export default function VehiclesPage() {
       key: 'isActive',
       label: 'Status',
       render: (value: boolean) => (
-        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-          value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-        }`}>
+        <span className={`badge ${value ? 'bg-moss-50 text-moss-700' : 'bg-rust-50 text-rust-500'}`}>
+          <span className={`badge-dot ${value ? 'bg-moss-500' : 'bg-rust-400'}`} />
           {value ? 'Ativo' : 'Inativo'}
         </span>
       )
@@ -40,8 +39,8 @@ export default function VehiclesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Veículos</h1>
-            <p className="text-gray-600">Gerencie os veículos da oficina</p>
+            <h1 className="text-2xl font-display font-semibold text-graphite-900">Veículos</h1>
+            <p className="text-graphite-500">Gerencie os veículos da oficina</p>
           </div>
           <button
             onClick={() => {

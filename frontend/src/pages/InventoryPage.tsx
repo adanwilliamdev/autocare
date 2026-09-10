@@ -29,7 +29,7 @@ export default function InventoryPage() {
   })
 
   const columns = [
-    { key: 'code', label: 'Código' },
+    { key: 'code', label: 'Código', render: (value: string) => <span className="font-mono text-graphite-800">{value}</span> },
     { key: 'name', label: 'Nome' },
     { key: 'manufacturer', label: 'Fabricante' },
     { key: 'stockQuantity', label: 'Estoque' },
@@ -37,17 +37,14 @@ export default function InventoryPage() {
       key: 'salePrice',
       label: 'Preço de venda',
       render: (value: number) =>
-        (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        <span className="font-mono">{(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>,
     },
     {
       key: 'isLowStock',
       label: 'Status',
       render: (value: boolean) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold ${
-            value ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-          }`}
-        >
+        <span className={`badge ${value ? 'bg-rust-50 text-rust-500' : 'bg-moss-50 text-moss-700'}`}>
+          <span className={`badge-dot ${value ? 'bg-rust-400' : 'bg-moss-500'}`} />
           {value ? 'Estoque baixo' : 'Normal'}
         </span>
       ),
@@ -69,7 +66,7 @@ export default function InventoryPage() {
           deleteMutation.mutate(part.id)
         }
       },
-      className: 'text-red-600 hover:text-red-800',
+      className: 'text-rust-500 hover:text-rust-600',
     },
   ]
 
@@ -78,8 +75,8 @@ export default function InventoryPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Estoque</h1>
-            <p className="text-gray-600">Controle de peças e movimentações</p>
+            <h1 className="text-2xl font-display font-semibold text-graphite-900">Estoque</h1>
+            <p className="text-graphite-500">Controle de peças e movimentações</p>
           </div>
           <button
             onClick={() => {

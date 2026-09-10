@@ -14,36 +14,57 @@ const menuItems = [
   { path: '/clients', label: 'Clientes', icon: UsersIcon },
   { path: '/vehicles', label: 'Veículos', icon: TruckIcon },
   { path: '/mechanics', label: 'Mecânicos', icon: UserGroupIcon },
-  { path: '/service-orders', label: 'Ordens de Serviço', icon: ClipboardDocumentListIcon },
+  { path: '/service-orders', label: 'Ordens de serviço', icon: ClipboardDocumentListIcon },
   { path: '/budgets', label: 'Orçamentos', icon: CurrencyDollarIcon },
   { path: '/inventory', label: 'Estoque', icon: CubeIcon },
 ]
 
 export default function Sidebar() {
   return (
-    <aside className="fixed top-0 left-0 w-64 h-full bg-gray-900 text-white">
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">🚗 AutoCare</h1>
-        <p className="text-sm text-gray-400">Sistema de Gestão</p>
+    <aside className="fixed top-0 left-0 w-64 h-full bg-graphite-900 text-graphite-200 flex flex-col">
+      <div className="px-6 pt-7 pb-6">
+        <div className="flex items-center gap-2.5">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-amber-400 flex-shrink-0">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M12 7v5l3.2 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <h1 className="text-lg font-display font-semibold text-white tracking-tight">AutoCare</h1>
+        </div>
+        <p className="text-xs text-graphite-400 mt-1 pl-[30px]">Sistema de gestão</p>
       </div>
-      <nav className="mt-8">
+
+      <nav className="flex-1 px-3 space-y-0.5">
         {menuItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
+            end={item.path === '/'}
             className={({ isActive }) =>
-              `flex items-center px-4 py-3 text-sm transition-colors ${
+              `group relative flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm transition-colors duration-150 ${
                 isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  ? 'bg-graphite-800 text-white'
+                  : 'text-graphite-400 hover:bg-graphite-800/60 hover:text-graphite-100'
               }`
             }
           >
-            <item.icon className="h-5 w-5 mr-3" />
-            {item.label}
+            {({ isActive }) => (
+              <>
+                <span
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-r-full transition-opacity duration-150 ${
+                    isActive ? 'bg-amber-400 opacity-100' : 'opacity-0'
+                  }`}
+                />
+                <item.icon className={`h-5 w-5 flex-shrink-0 ${isActive ? 'text-amber-400' : 'text-graphite-500 group-hover:text-graphite-300'}`} />
+                <span className="font-medium">{item.label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
+
+      <div className="px-6 py-5 border-t border-graphite-800">
+        <p className="text-xs text-graphite-500">v1.0 · Painel interno</p>
+      </div>
     </aside>
   )
 }

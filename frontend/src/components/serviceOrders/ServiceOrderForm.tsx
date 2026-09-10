@@ -131,7 +131,7 @@ export default function ServiceOrderForm({ isOpen, onClose }: ServiceOrderFormPr
           placeholder="Atribuir depois"
         />
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Problema relatado</label>
+          <label className="block text-sm font-medium text-graphite-700">Problema relatado</label>
           <textarea
             className="input-field"
             rows={3}

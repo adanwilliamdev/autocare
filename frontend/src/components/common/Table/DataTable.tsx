@@ -25,45 +25,45 @@ export default function DataTable<T extends { id: string }>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <div className="flex justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex justify-center py-12">
+        <div className="h-8 w-8 rounded-full border-2 border-graphite-200 border-t-amber-500 animate-spin" />
       </div>
     )
   }
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        Nenhum dado encontrado
+      <div className="text-center py-14 bg-white rounded-xl2 border border-graphite-100">
+        <p className="text-graphite-400 text-sm">Nenhum dado encontrado</p>
       </div>
     )
   }
 
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
+    <div className="overflow-x-auto bg-white rounded-xl2 border border-graphite-100 shadow-soft">
+      <table className="min-w-full">
+        <thead>
+          <tr className="border-b border-graphite-100">
             {columns.map((column) => (
               <th
                 key={String(column.key)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-5 py-3 text-left text-xs font-medium text-graphite-400"
               >
                 {column.label}
               </th>
             ))}
             {actions && (
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-5 py-3 text-left text-xs font-medium text-graphite-400">
                 Ações
               </th>
             )}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="divide-y divide-graphite-50">
           {data.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
+            <tr key={item.id} className="hover:bg-amber-50/40 transition-colors duration-100">
               {columns.map((column) => (
-                <td key={String(column.key)} className="px-6 py-4 whitespace-nowrap">
+                <td key={String(column.key)} className="px-5 py-3.5 text-sm text-graphite-700 whitespace-nowrap">
                   {column.render
                     ? column.render(
                         column.key instanceof String
@@ -75,13 +75,13 @@ export default function DataTable<T extends { id: string }>({
                 </td>
               ))}
               {actions && (
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex space-x-2">
+                <td className="px-5 py-3.5 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
                     {actions.map((action, index) => (
                       <button
                         key={index}
                         onClick={() => action.onClick(item)}
-                        className={`text-sm text-blue-600 hover:text-blue-800 ${action.className || ''}`}
+                        className={`text-sm font-medium text-graphite-500 hover:text-amber-600 transition-colors duration-100 ${action.className || ''}`}
                       >
                         {action.label}
                       </button>

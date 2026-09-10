@@ -17,15 +17,15 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, error, required, className, options, placeholder, ...props }, ref) => {
     return (
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
-          {label} {required && <span className="text-red-500">*</span>}
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-graphite-700">
+          {label} {required && <span className="text-rust-500">*</span>}
         </label>
         <select
           ref={ref}
           className={clsx(
             'input-field',
-            error && 'border-red-500 focus:ring-red-500',
+            error && 'border-rust-400 focus:ring-rust-400/40 focus:border-rust-400',
             className
           )}
           {...props}
@@ -37,7 +37,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-rust-500">{error}</p>}
       </div>
     )
   }

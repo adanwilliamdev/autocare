@@ -81,7 +81,7 @@ export default function ServiceOrdersPage() {
           statusMutation.mutate({ id: order.id, status: 'CANCELADA' })
         }
       },
-      className: 'text-red-600 hover:text-red-800',
+      className: 'text-rust-500 hover:text-rust-600',
     },
   ]
 
@@ -90,8 +90,8 @@ export default function ServiceOrdersPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Ordens de Serviço</h1>
-            <p className="text-gray-600">Acompanhe o ciclo de atendimento da oficina</p>
+            <h1 className="text-2xl font-display font-semibold text-graphite-900">Ordens de Serviço</h1>
+            <p className="text-graphite-500">Acompanhe o ciclo de atendimento da oficina</p>
           </div>
           <button onClick={() => setIsModalOpen(true)} className="btn-primary">
             + Nova Ordem

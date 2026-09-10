@@ -116,7 +116,7 @@ export default function BudgetForm({ isOpen, onClose }: BudgetFormProps) {
           required
         />
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Descrição</label>
+          <label className="block text-sm font-medium text-graphite-700">Descrição</label>
           <textarea
             className="input-field"
             rows={3}

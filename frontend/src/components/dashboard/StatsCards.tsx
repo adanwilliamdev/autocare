@@ -3,8 +3,7 @@ import {
   UsersIcon,
   TruckIcon,
   ClipboardDocumentListIcon,
-  CurrencyDollarIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
 
 interface StatsCardsProps {
@@ -12,59 +11,34 @@ interface StatsCardsProps {
 }
 
 export default function StatsCards({ stats }: StatsCardsProps) {
-  const cards = [
-    {
-      title: 'Clientes',
-      value: stats.totalClients,
-      icon: UsersIcon,
-      color: 'bg-blue-500',
-    },
-    {
-      title: 'Veículos',
-      value: stats.totalVehicles,
-      icon: TruckIcon,
-      color: 'bg-green-500',
-    },
-    {
-      title: 'Ordens Abertas',
-      value: stats.openServiceOrders,
-      icon: ClipboardDocumentListIcon,
-      color: 'bg-yellow-500',
-    },
-    {
-      title: 'Faturamento Mensal',
-      value: `R$ ${stats.monthlyRevenue?.toFixed(2) || '0,00'}`,
-      icon: CurrencyDollarIcon,
-      color: 'bg-purple-500',
-    },
+  const tiles = [
+    { title: 'Clientes', value: stats.totalClients, icon: UsersIcon },
+    { title: 'Veículos', value: stats.totalVehicles, icon: TruckIcon },
+    { title: 'Ordens abertas', value: stats.openServiceOrders, icon: ClipboardDocumentListIcon },
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card) => (
-        <div key={card.title} className="card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">{card.title}</p>
-              <p className="text-2xl font-bold">{card.value}</p>
-            </div>
-            <div className={`${card.color} p-3 rounded-lg`}>
-              <card.icon className="h-6 w-6 text-white" />
-            </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {tiles.map((tile) => (
+        <div key={tile.title} className="card !p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-graphite-50 flex items-center justify-center flex-shrink-0">
+            <tile.icon className="h-5 w-5 text-graphite-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-display font-semibold text-graphite-900 leading-none">{tile.value}</p>
+            <p className="text-sm text-graphite-500 mt-1">{tile.title}</p>
           </div>
         </div>
       ))}
 
       {stats.lowStockItems > 0 && (
-        <div className="card border-2 border-red-200 bg-red-50">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-red-600">⚠️ Estoque Baixo</p>
-              <p className="text-2xl font-bold text-red-700">{stats.lowStockItems} itens</p>
-            </div>
-            <div className="bg-red-500 p-3 rounded-lg">
-              <ExclamationTriangleIcon className="h-6 w-6 text-white" />
-            </div>
+        <div className="card !p-5 flex items-center gap-4 border-rust-100 bg-rust-50/60">
+          <div className="h-10 w-10 rounded-lg bg-rust-100 flex items-center justify-center flex-shrink-0">
+            <ExclamationTriangleIcon className="h-5 w-5 text-rust-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-display font-semibold text-rust-600 leading-none">{stats.lowStockItems}</p>
+            <p className="text-sm text-rust-500 mt-1">Itens com estoque baixo</p>
           </div>
         </div>
       )}

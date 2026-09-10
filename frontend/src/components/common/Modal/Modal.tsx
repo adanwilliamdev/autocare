@@ -35,19 +35,22 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose} />
+        <div
+          className="fixed inset-0 bg-graphite-950/50 backdrop-blur-[2px] animate-fadeIn"
+          onClick={onClose}
+        />
 
         <div
           ref={modalRef}
-          className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6"
+          className="relative bg-white rounded-xl2 shadow-lifted max-w-md w-full p-6 animate-modalIn"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-lg font-display font-semibold text-graphite-900">{title}</h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="h-8 w-8 flex items-center justify-center rounded-lg text-graphite-400 hover:text-graphite-700 hover:bg-graphite-50 transition-colors duration-150"
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="h-5 w-5" />
             </button>
           </div>
 

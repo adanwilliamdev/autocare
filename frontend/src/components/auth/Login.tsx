@@ -41,52 +41,85 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            🚗 AutoCare
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Sistema de Gestão de Oficina
+    <div className="min-h-screen flex bg-paper">
+      {/* Brand panel */}
+      <div className="hidden lg:flex lg:w-[42%] relative bg-graphite-900 text-white flex-col justify-between overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        <div className="relative px-12 pt-14">
+          <div className="flex items-center gap-2.5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-amber-400">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M12 7v5l3.2 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className="text-lg font-display font-semibold tracking-tight">AutoCare</span>
+          </div>
+        </div>
+        <div className="relative px-12 pb-16">
+          <p className="font-display text-3xl leading-snug max-w-sm text-white">
+            Cada ordem de serviço, cada peça, cada cliente — em um só lugar.
+          </p>
+          <p className="mt-4 text-sm text-graphite-400 max-w-sm">
+            Sistema de gestão para oficinas que levam a operação a sério.
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="rounded-md shadow-sm -space-y-px">
+      </div>
+
+      {/* Form panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="max-w-sm w-full">
+          <div className="lg:hidden flex items-center gap-2.5 mb-10">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-amber-500">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M12 7v5l3.2 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className="text-lg font-display font-semibold text-graphite-900">AutoCare</span>
+          </div>
+
+          <h2 className="text-2xl font-display font-semibold text-graphite-900">Entrar</h2>
+          <p className="mt-1.5 text-sm text-graphite-500">Acesse o painel de gestão da sua oficina.</p>
+
+          <form className="mt-8 space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
+              <label className="block text-sm font-medium text-graphite-700 mb-1.5">Email</label>
               <input
                 {...register('email')}
                 type="email"
-                placeholder="Email"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="voce@oficina.com"
+                className="input-field"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                <p className="text-rust-500 text-xs mt-1.5">{errors.email.message}</p>
               )}
             </div>
             <div>
+              <label className="block text-sm font-medium text-graphite-700 mb-1.5">Senha</label>
               <input
                 {...register('password')}
                 type="password"
-                placeholder="Senha"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="••••••••"
+                className="input-field"
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                <p className="text-rust-500 text-xs mt-1.5">{errors.password.message}</p>
               )}
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              className="btn-primary w-full mt-2"
             >
               {isLoading ? 'Entrando...' : 'Entrar'}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   )

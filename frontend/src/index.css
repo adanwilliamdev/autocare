@@ -9,32 +9,69 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-paper text-graphite-900 antialiased font-sans;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-amber-200 text-graphite-900;
   }
 }
 
 @layer components {
+  /* Buttons — one accent, spent deliberately on primary actions */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 active:bg-amber-700
+           text-white font-medium text-sm py-2.5 px-4 rounded-lg shadow-soft
+           transition-all duration-150 ease-out
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-paper
+           disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-graphite-50 active:bg-graphite-100
+           text-graphite-700 font-medium text-sm py-2.5 px-4 rounded-lg border border-graphite-200
+           transition-all duration-150 ease-out
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-graphite-300 focus-visible:ring-offset-2 focus-visible:ring-offset-paper
+           disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-rust-500 hover:bg-rust-600 active:bg-rust-600
+           text-white font-medium text-sm py-2.5 px-4 rounded-lg shadow-soft
+           transition-all duration-150 ease-out
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-rust-400 focus-visible:ring-offset-2 focus-visible:ring-offset-paper
+           disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-success {
-    @apply bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-moss-500 hover:bg-moss-600 active:bg-moss-600
+           text-white font-medium text-sm py-2.5 px-4 rounded-lg shadow-soft
+           transition-all duration-150 ease-out
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-moss-400 focus-visible:ring-offset-2 focus-visible:ring-offset-paper
+           disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    @apply w-full px-3.5 py-2.5 bg-white border border-graphite-200 rounded-lg text-sm text-graphite-900
+           placeholder:text-graphite-400
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400;
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    @apply bg-white rounded-xl2 border border-graphite-100 shadow-soft p-6;
+  }
+
+  /* dot-style status badge — pairs a small indicator with a label instead of a solid color block */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-dot {
+    @apply h-1.5 w-1.5 rounded-full flex-shrink-0;
   }
 }

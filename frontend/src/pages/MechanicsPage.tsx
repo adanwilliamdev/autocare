@@ -48,11 +48,8 @@ export default function MechanicsPage() {
       key: 'isAvailable',
       label: 'Disponibilidade',
       render: (value: boolean) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold ${
-            value ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-          }`}
-        >
+        <span className={`badge ${value ? 'bg-moss-50 text-moss-700' : 'bg-amber-100 text-amber-700'}`}>
+          <span className={`badge-dot ${value ? 'bg-moss-500' : 'bg-amber-500'}`} />
           {value ? 'Disponível' : 'Ocupado'}
         </span>
       ),
@@ -80,7 +77,7 @@ export default function MechanicsPage() {
           deleteMutation.mutate(mechanic.id)
         }
       },
-      className: 'text-red-600 hover:text-red-800',
+      className: 'text-rust-500 hover:text-rust-600',
     },
   ]
 
@@ -89,8 +86,8 @@ export default function MechanicsPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Mecânicos</h1>
-            <p className="text-gray-600">Gerencie a equipe de mecânicos da oficina</p>
+            <h1 className="text-2xl font-display font-semibold text-graphite-900">Mecânicos</h1>
+            <p className="text-graphite-500">Gerencie a equipe de mecânicos da oficina</p>
           </div>
           <button
             onClick={() => {

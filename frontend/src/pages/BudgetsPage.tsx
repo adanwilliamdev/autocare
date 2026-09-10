@@ -7,11 +7,11 @@ import { getBudgets, approveBudget, rejectBudget } from '@/api/budgets'
 import { Budget, BudgetStatus } from '@/types/budget'
 import BudgetForm from '@/components/budgets/BudgetForm'
 
-const statusStyles: Record<BudgetStatus, string> = {
-  PENDENTE: 'bg-yellow-100 text-yellow-800',
-  APROVADO: 'bg-green-100 text-green-800',
-  RECUSADO: 'bg-red-100 text-red-800',
-  EXPIRADO: 'bg-gray-100 text-gray-800',
+const statusStyles: Record<BudgetStatus, { bg: string; text: string; dot: string }> = {
+  PENDENTE: { bg: 'bg-amber-100', text: 'text-amber-700', dot: 'bg-amber-500' },
+  APROVADO: { bg: 'bg-moss-50', text: 'text-moss-700', dot: 'bg-moss-500' },
+  RECUSADO: { bg: 'bg-rust-50', text: 'text-rust-500', dot: 'bg-rust-400' },
+  EXPIRADO: { bg: 'bg-graphite-100', text: 'text-graphite-500', dot: 'bg-graphite-400' },
 }
 
 export default function BudgetsPage() {
@@ -46,20 +46,21 @@ export default function BudgetsPage() {
   })
 
   const columns = [
-    { key: 'budgetNumber', label: 'Número' },
+    { key: 'budgetNumber', label: 'Número', render: (value: string) => <span className="font-mono text-graphite-800">{value}</span> },
     { key: 'clientName', label: 'Cliente' },
     { key: 'vehicleInfo', label: 'Veículo' },
     {
       key: 'totalAmount',
       label: 'Valor',
       render: (value: number) =>
-        (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        <span className="font-mono">{(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>,
     },
     {
       key: 'status',
       label: 'Status',
       render: (value: BudgetStatus) => (
-        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusStyles[value]}`}>
+        <span className={`badge ${statusStyles[value].bg} ${statusStyles[value].text}`}>
+          <span className={`badge-dot ${statusStyles[value].dot}`} />
           {value}
         </span>
       ),
@@ -70,12 +71,12 @@ export default function BudgetsPage() {
     {
       label: 'Aprovar',
       onClick: (budget: Budget) => approveMutation.mutate(budget.id),
-      className: 'text-green-600 hover:text-green-800',
+      className: 'text-moss-600 hover:text-moss-700',
     },
     {
       label: 'Recusar',
       onClick: (budget: Budget) => rejectMutation.mutate(budget.id),
-      className: 'text-red-600 hover:text-red-800',
+      className: 'text-rust-500 hover:text-rust-600',
     },
   ]
 
@@ -84,8 +85,8 @@ export default function BudgetsPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Orçamentos</h1>
-            <p className="text-gray-600">Acompanhe e aprove os orçamentos da oficina</p>
+            <h1 className="text-2xl font-display font-semibold text-graphite-900">Orçamentos</h1>
+            <p className="text-graphite-500">Acompanhe e aprove os orçamentos da oficina</p>
           </div>
           <button onClick={() => setIsModalOpen(true)} className="btn-primary">
             + Novo Orçamento
