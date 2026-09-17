@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import Layout from '@/components/common/Layout/Layout'
 import DataTable from '@/components/common/Table/DataTable'
@@ -23,14 +24,22 @@ export default function BudgetsPage() {
     queryFn: getBudgets,
   })
 
+  const extractErrorMessage = (error: unknown, fallback: string) => {
+    const message = (error as AxiosError<{ message?: string }>)?.response?.data?.message
+    return message || fallback
+  }
+
   const approveMutation = useMutation({
     mutationFn: approveBudget,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budgets'] })
       toast.success('Orçamento aprovado')
     },
-    onError: () => {
-      toast.error('Erro ao aprovar orçamento')
+    onError: (error) => {
+      // Se o status já mudou (ex.: outro usuário aprovou/recusou antes), sincroniza a
+      // tabela para que os botões somem imediatamente, em vez de continuarem visíveis.
+      queryClient.invalidateQueries({ queryKey: ['budgets'] })
+      toast.error(extractErrorMessage(error, 'Erro ao aprovar orçamento'))
     },
   })
 
@@ -40,8 +49,9 @@ export default function BudgetsPage() {
       queryClient.invalidateQueries({ queryKey: ['budgets'] })
       toast.success('Orçamento recusado')
     },
-    onError: () => {
-      toast.error('Erro ao recusar orçamento')
+    onError: (error) => {
+      queryClient.invalidateQueries({ queryKey: ['budgets'] })
+      toast.error(extractErrorMessage(error, 'Erro ao recusar orçamento'))
     },
   })
 
@@ -70,13 +80,21 @@ export default function BudgetsPage() {
   const actions = [
     {
       label: 'Aprovar',
-      onClick: (budget: Budget) => approveMutation.mutate(budget.id),
+      onClick: (budget: Budget) => {
+        if (approveMutation.isPending || rejectMutation.isPending) return
+        approveMutation.mutate(budget.id)
+      },
       className: 'text-moss-600 hover:text-moss-700',
+      show: (budget: Budget) => budget.status === 'PENDENTE',
     },
     {
       label: 'Recusar',
-      onClick: (budget: Budget) => rejectMutation.mutate(budget.id),
+      onClick: (budget: Budget) => {
+        if (approveMutation.isPending || rejectMutation.isPending) return
+        rejectMutation.mutate(budget.id)
+      },
       className: 'text-rust-500 hover:text-rust-600',
+      show: (budget: Budget) => budget.status === 'PENDENTE',
     },
   ]
 

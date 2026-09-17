@@ -14,6 +14,7 @@ interface DataTableProps<T> {
     label: string
     onClick: (item: T) => void
     className?: string
+    show?: (item: T) => boolean
   }[]
 }
 
@@ -77,15 +78,17 @@ export default function DataTable<T extends { id: string }>({
               {actions && (
                 <td className="px-5 py-3.5 whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                    {actions.map((action, index) => (
-                      <button
-                        key={index}
-                        onClick={() => action.onClick(item)}
-                        className={`text-sm font-medium text-graphite-500 hover:text-amber-600 transition-colors duration-100 ${action.className || ''}`}
-                      >
-                        {action.label}
-                      </button>
-                    ))}
+                    {actions
+                      .filter((action) => !action.show || action.show(item))
+                      .map((action, index) => (
+                        <button
+                          key={index}
+                          onClick={() => action.onClick(item)}
+                          className={`text-sm font-medium text-graphite-500 hover:text-amber-600 transition-colors duration-100 ${action.className || ''}`}
+                        >
+                          {action.label}
+                        </button>
+                      ))}
                   </div>
                 </td>
               )}
