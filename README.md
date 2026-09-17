@@ -288,15 +288,22 @@ docker-compose down
 Requisitos:
 
 * Java 21+
-* Maven 3.9+
+* Maven 3.9+ (instalado na máquina — o projeto não inclui o Maven Wrapper)
 * PostgreSQL 16+
 
 ```bash
 cd backend
 
-./mvnw clean install
-./mvnw spring-boot:run
+mvn clean install
+mvn spring-boot:run
 ```
+
+> No Windows (PowerShell), os mesmos comandos `mvn` funcionam normalmente, desde que o Maven esteja no PATH.
+>
+> Se preferir usar o wrapper (`mvnw` / `mvnw.cmd`) em vez do Maven instalado globalmente, gere-o uma vez com:
+> ```bash
+> mvn -N io.takari:maven:wrapper -Dmaven=3.9.6
+> ```
 
 ### Frontend
 
@@ -362,6 +369,7 @@ PATCH  /api/service-orders/{id}/status
 GET    /api/budgets
 POST   /api/budgets
 PATCH  /api/budgets/{id}/approve
+PATCH  /api/budgets/{id}/reject
 
 GET    /api/inventory/parts
 POST   /api/inventory/parts
@@ -400,7 +408,7 @@ erDiagram
 
 ```bash
 cd backend
-./mvnw test
+mvn test
 ```
 
 Os testes abrangem principalmente:
@@ -427,7 +435,7 @@ npm test
 
 ```bash
 cd backend
-./mvnw clean package -DskipTests
+mvn clean package -DskipTests
 ```
 
 ### Frontend
