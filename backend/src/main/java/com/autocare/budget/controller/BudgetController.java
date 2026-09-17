@@ -8,18 +8,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Criação/consulta liberada para quem atende o cliente (ADMIN, RECEPTIONIST) e para
+ * MANAGER (relatórios). Aprovar/rejeitar um orçamento é uma decisão financeira e fica
+ * restrita a ADMIN e MANAGER.
+ */
 @RestController
 @RequestMapping("/budgets")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'MANAGER')")
 public class BudgetController {
 
     private final BudgetService budgetService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<BudgetResponseDTO> create(@Valid @RequestBody BudgetRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(budgetService.create(request));
     }
@@ -45,11 +53,13 @@ public class BudgetController {
     }
 
     @PatchMapping("/{id}/approve")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BudgetResponseDTO> approve(@PathVariable String id) {
         return ResponseEntity.ok(budgetService.approve(id));
     }
 
     @PatchMapping("/{id}/reject")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BudgetResponseDTO> reject(@PathVariable String id) {
         return ResponseEntity.ok(budgetService.reject(id));
     }

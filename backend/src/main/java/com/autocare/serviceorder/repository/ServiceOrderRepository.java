@@ -24,4 +24,10 @@ public interface ServiceOrderRepository extends JpaRepository<ServiceOrder, Stri
 
     boolean existsByOrderNumber(String orderNumber);
     ServiceOrder findByOrderNumber(String orderNumber);
+
+    // Usa uma sequence do Postgres (criada na migration V5) em vez de "count() + 1":
+    // count()+1 não é atômico, então duas OS criadas ao mesmo tempo podiam calcular o
+    // mesmo próximo número. nextval() é garantido atômico pelo banco mesmo sob concorrência.
+    @Query(value = "SELECT nextval('service_order_number_seq')", nativeQuery = true)
+    Long nextOrderSequenceValue();
 }

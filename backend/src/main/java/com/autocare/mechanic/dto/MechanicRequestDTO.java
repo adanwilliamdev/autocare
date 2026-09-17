@@ -17,4 +17,8 @@ public class MechanicRequestDTO {
 
     private String specialty;
     private String phone;
+
+    // Opcional: vincula este perfil de mecânico a uma conta de login (User com role
+    // MECHANIC), permitindo que o próprio mecânico acesse suas OS pelo sistema.
+    private String userId;
 }

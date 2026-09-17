@@ -29,8 +29,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(auth -> auth
+                        // Apenas os endpoints realmente públicos de autenticação ficam liberados.
+                        // /auth/users fica de fora de propósito: precisa de um ADMIN autenticado
+                        // (aplicado via @PreAuthorize no AuthController) para criar contas com
+                        // papéis elevados.
                         .requestMatchers(
-                                "/auth/**",
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/refresh"
+                        ).permitAll()
+                        .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"

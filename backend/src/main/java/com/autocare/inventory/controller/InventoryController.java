@@ -4,17 +4,25 @@ import com.autocare.inventory.dto.InventoryMovementDTO;
 import com.autocare.inventory.dto.PartRequestDTO;
 import com.autocare.inventory.dto.PartResponseDTO;
 import com.autocare.inventory.service.InventoryService;
+import com.autocare.shared.security.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Conforme a tabela de permissões do projeto, o módulo de estoque é restrito a
+ * ADMIN e MANAGER (RECEPTIONIST e MECHANIC não devem criar peças ou movimentar
+ * estoque diretamente).
+ */
 @RestController
 @RequestMapping("/inventory")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
 public class InventoryController {
 
     private final InventoryService inventoryService;
@@ -59,9 +67,11 @@ public class InventoryController {
     public ResponseEntity<Void> addStock(
             @PathVariable String id,
             @RequestParam Integer quantity,
-            @RequestParam String reason,
-            @RequestParam String userId) {
-        inventoryService.addStock(id, quantity, reason, userId);
+            @RequestParam String reason) {
+        // O userId de auditoria vem sempre do usuário autenticado (JWT), nunca de um
+        // parâmetro enviado pelo cliente — antes era possível forjar esse valor e
+        // registrar uma movimentação de estoque em nome de outra pessoa.
+        inventoryService.addStock(id, quantity, reason, SecurityUtils.getCurrentUserId());
         return ResponseEntity.noContent().build();
     }
 
@@ -69,9 +79,8 @@ public class InventoryController {
     public ResponseEntity<Void> removeStock(
             @PathVariable String id,
             @RequestParam Integer quantity,
-            @RequestParam String reason,
-            @RequestParam String userId) {
-        inventoryService.removeStock(id, quantity, reason, userId);
+            @RequestParam String reason) {
+        inventoryService.removeStock(id, quantity, reason, SecurityUtils.getCurrentUserId());
         return ResponseEntity.noContent().build();
     }
 

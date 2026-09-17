@@ -24,5 +24,7 @@ export interface RegisterRequest {
   name: string
   email: string
   password: string
-  role?: string
+  // Propositalmente sem "role": o autocadastro público sempre cria uma conta
+  // RECEPTIONIST no backend (ver AuthService.register). Contas com outros papéis
+  // são criadas por um ADMIN via POST /auth/users.
 }

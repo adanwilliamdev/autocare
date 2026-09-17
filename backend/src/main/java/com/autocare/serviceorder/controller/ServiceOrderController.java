@@ -9,18 +9,27 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * MECHANIC só é liberado em findById/updateStatus (para ver e diagnosticar a própria OS);
+ * a restrição "somente a que foi atribuída a ele" é aplicada em
+ * ServiceOrderService#assertCanAccessOrder, pois @PreAuthorize sozinho não sabe qual
+ * mecânico está por trás do ID da URL.
+ */
 @RestController
 @RequestMapping("/service-orders")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'RECEPTIONIST')")
 public class ServiceOrderController {
 
     private final ServiceOrderService serviceOrderService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<ServiceOrderResponseDTO> create(@Valid @RequestBody ServiceOrderRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceOrderService.create(request));
     }
@@ -31,6 +40,7 @@ public class ServiceOrderController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'RECEPTIONIST', 'MECHANIC')")
     public ResponseEntity<ServiceOrderResponseDTO> findById(@PathVariable String id) {
         return ResponseEntity.ok(serviceOrderService.findByIdResponse(id));
     }
@@ -51,6 +61,7 @@ public class ServiceOrderController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'MECHANIC')")
     public ResponseEntity<ServiceOrderResponseDTO> updateStatus(
             @PathVariable String id,
             @Valid @RequestBody StatusUpdateRequestDTO request) {
@@ -58,6 +69,7 @@ public class ServiceOrderController {
     }
 
     @PatchMapping("/{id}/mechanic")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'RECEPTIONIST')")
     public ResponseEntity<ServiceOrderResponseDTO> assignMechanic(
             @PathVariable String id,
             @RequestParam String mechanicId) {

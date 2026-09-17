@@ -1,5 +1,7 @@
 package com.autocare.inventory.entity;
 
+import com.autocare.shared.exception.BusinessException;
+import com.autocare.shared.exception.InsufficientStockException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +52,17 @@ public class Part {
     @Column(name = "is_active")
     private boolean isActive = true;
 
+    // Lock otimista: sem isso, duas requisições concorrentes de addStock/removeStock
+    // (ex.: duas OS baixando a mesma peça ao mesmo tempo) podem ler o mesmo valor de
+    // stockQuantity, cada uma calcular seu próprio resultado e a última a salvar
+    // sobrescrever a alteração da outra ("lost update"), deixando o estoque incorreto.
+    // Com @Version, o Hibernate falha a segunda escrita com OptimisticLockException,
+    // permitindo detectar e reprocessar o conflito em vez de silenciosamente corrompê-lo.
+    @Version
+    @Column(name = "version", nullable = false)
+    @Builder.Default
+    private Long version = 0L;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -62,18 +75,22 @@ public class Part {
     }
 
     public void addStock(Integer quantity) {
+        // Antes lançava IllegalArgumentException, que não é tratada especificamente pelo
+        // GlobalExceptionHandler e caía no handler genérico -> HTTP 500 "Erro interno do
+        // servidor", escondendo do usuário a mensagem real. BusinessException já tem
+        // handler dedicado -> HTTP 400 com a mensagem correta.
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantidade deve ser positiva");
+            throw new BusinessException("Quantidade deve ser positiva");
         }
         this.stockQuantity += quantity;
     }
 
     public void removeStock(Integer quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantidade deve ser positiva");
+            throw new BusinessException("Quantidade deve ser positiva");
         }
         if (this.stockQuantity < quantity) {
-            throw new IllegalArgumentException("Estoque insuficiente. Disponível: " + this.stockQuantity);
+            throw new InsufficientStockException("Estoque insuficiente. Disponível: " + this.stockQuantity);
         }
         this.stockQuantity -= quantity;
     }

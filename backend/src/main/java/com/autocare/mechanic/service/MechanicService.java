@@ -4,6 +4,7 @@ import com.autocare.mechanic.dto.MechanicRequestDTO;
 import com.autocare.mechanic.dto.MechanicResponseDTO;
 import com.autocare.mechanic.entity.Mechanic;
 import com.autocare.mechanic.repository.MechanicRepository;
+import com.autocare.shared.exception.BusinessException;
 import com.autocare.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,15 @@ public class MechanicService {
 
     @Transactional
     public MechanicResponseDTO create(MechanicRequestDTO request) {
+        if (request.getUserId() != null && mechanicRepository.findByUserId(request.getUserId()).isPresent()) {
+            throw new BusinessException("Este usuário já está vinculado a outro perfil de mecânico");
+        }
+
         Mechanic mechanic = Mechanic.builder()
                 .name(request.getName())
                 .specialty(request.getSpecialty())
                 .phone(request.getPhone())
+                .userId(request.getUserId())
                 .isAvailable(true)
                 .isActive(true)
                 .build();
@@ -36,9 +42,16 @@ public class MechanicService {
     public MechanicResponseDTO update(String id, MechanicRequestDTO request) {
         Mechanic mechanic = findById(id);
 
+        if (request.getUserId() != null
+                && !request.getUserId().equals(mechanic.getUserId())
+                && mechanicRepository.findByUserId(request.getUserId()).isPresent()) {
+            throw new BusinessException("Este usuário já está vinculado a outro perfil de mecânico");
+        }
+
         mechanic.setName(request.getName());
         mechanic.setSpecialty(request.getSpecialty());
         mechanic.setPhone(request.getPhone());
+        mechanic.setUserId(request.getUserId());
 
         mechanic = mechanicRepository.save(mechanic);
         return toResponseDTO(mechanic);

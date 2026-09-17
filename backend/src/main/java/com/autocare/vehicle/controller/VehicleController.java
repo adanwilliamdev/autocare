@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,11 +15,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/vehicles")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'MANAGER', 'MECHANIC')")
 public class VehicleController {
 
     private final VehicleService vehicleService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<VehicleResponseDTO> create(@Valid @RequestBody VehicleRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.create(request));
     }
@@ -39,6 +42,7 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<VehicleResponseDTO> update(
             @PathVariable String id,
             @Valid @RequestBody VehicleRequestDTO request) {
@@ -46,6 +50,7 @@ public class VehicleController {
     }
 
     @PatchMapping("/{id}/mileage")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'MECHANIC')")
     public ResponseEntity<Void> updateMileage(
             @PathVariable String id,
             @RequestParam Integer mileage) {
@@ -54,6 +59,7 @@ public class VehicleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable String id) {
         vehicleService.delete(id);

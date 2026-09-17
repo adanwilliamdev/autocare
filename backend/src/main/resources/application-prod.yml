@@ -1,8 +1,24 @@
 spring:
+  # Em produção, senha do banco e segredo do JWT NÃO têm valor padrão: se a variável
+  # de ambiente não for definida, o Spring falha ao subir (fail-fast) em vez de rodar
+  # silenciosamente com um segredo previsível/compartilhado com o ambiente de dev.
+  datasource:
+    password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: false
+
+jwt:
+  secret: ${JWT_SECRET}
+
+# Swagger/OpenAPI desabilitado em produção — não deve ficar exposto publicamente.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
 
 logging:
   level:

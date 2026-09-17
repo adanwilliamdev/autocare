@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null
   isLoading: boolean
   login: (credentials: LoginCredentials) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   isAuthenticated: boolean
 }
 
@@ -19,7 +19,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      // Buscar dados do usuário
       const storedUser = localStorage.getItem('user')
       if (storedUser) {
         setUser(JSON.parse(storedUser))
@@ -31,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: LoginCredentials) => {
     const response = await apiLogin(credentials)
     localStorage.setItem('token', response.token)
+    localStorage.setItem('refreshToken', response.refreshToken)
     localStorage.setItem('user', JSON.stringify({
       id: response.userId,
       name: response.name,
@@ -46,8 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  const logout = () => {
-    apiLogout()
+  const logout = async () => {
+    await apiLogout()
     localStorage.removeItem('user')
     setUser(null)
   }

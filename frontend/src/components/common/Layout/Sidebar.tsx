@@ -8,18 +8,24 @@ import {
   CurrencyDollarIcon,
   CubeIcon,
 } from '@heroicons/react/24/outline'
+import { useAuth } from '@/contexts/AuthContext'
+import { User } from '@/types/auth'
 
-const menuItems = [
-  { path: '/', label: 'Dashboard', icon: HomeIcon },
-  { path: '/clients', label: 'Clientes', icon: UsersIcon },
-  { path: '/vehicles', label: 'Veículos', icon: TruckIcon },
-  { path: '/mechanics', label: 'Mecânicos', icon: UserGroupIcon },
-  { path: '/service-orders', label: 'Ordens de serviço', icon: ClipboardDocumentListIcon },
-  { path: '/budgets', label: 'Orçamentos', icon: CurrencyDollarIcon },
-  { path: '/inventory', label: 'Estoque', icon: CubeIcon },
+const menuItems: { path: string; label: string; icon: typeof HomeIcon; roles: User['role'][] }[] = [
+  { path: '/', label: 'Dashboard', icon: HomeIcon, roles: ['ADMIN', 'MANAGER'] },
+  { path: '/clients', label: 'Clientes', icon: UsersIcon, roles: ['ADMIN', 'RECEPTIONIST', 'MANAGER'] },
+  { path: '/vehicles', label: 'Veículos', icon: TruckIcon, roles: ['ADMIN', 'RECEPTIONIST', 'MANAGER', 'MECHANIC'] },
+  { path: '/mechanics', label: 'Mecânicos', icon: UserGroupIcon, roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST'] },
+  { path: '/service-orders', label: 'Ordens de serviço', icon: ClipboardDocumentListIcon, roles: ['ADMIN', 'MANAGER', 'RECEPTIONIST', 'MECHANIC'] },
+  { path: '/budgets', label: 'Orçamentos', icon: CurrencyDollarIcon, roles: ['ADMIN', 'RECEPTIONIST', 'MANAGER'] },
+  { path: '/inventory', label: 'Estoque', icon: CubeIcon, roles: ['ADMIN', 'MANAGER'] },
 ]
 
 export default function Sidebar() {
+  const { user } = useAuth()
+  // Sem isso, o menu mostrava links que o próprio backend recusaria para o papel
+  // logado (ex.: um MECHANIC via "Estoque" e caía num 403 ao clicar).
+  const visibleItems = menuItems.filter((item) => !user || item.roles.includes(user.role))
   return (
     <aside className="fixed top-0 left-0 w-64 h-full bg-graphite-900 text-graphite-200 flex flex-col">
       <div className="px-6 pt-7 pb-6">
@@ -34,7 +40,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-3 space-y-0.5">
-        {menuItems.map((item) => (
+        {visibleItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}

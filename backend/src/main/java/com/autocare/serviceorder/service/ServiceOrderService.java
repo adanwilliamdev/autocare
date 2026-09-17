@@ -1,8 +1,11 @@
 package com.autocare.serviceorder.service;
 
+import com.autocare.auth.entity.Role;
+import com.autocare.auth.entity.User;
 import com.autocare.client.entity.Client;
 import com.autocare.client.service.ClientService;
 import com.autocare.mechanic.entity.Mechanic;
+import com.autocare.mechanic.repository.MechanicRepository;
 import com.autocare.mechanic.service.MechanicService;
 import com.autocare.serviceorder.dto.ServiceOrderRequestDTO;
 import com.autocare.serviceorder.dto.ServiceOrderResponseDTO;
@@ -12,9 +15,11 @@ import com.autocare.serviceorder.entity.ServiceOrderStatus;
 import com.autocare.serviceorder.repository.ServiceOrderRepository;
 import com.autocare.shared.exception.BusinessException;
 import com.autocare.shared.exception.ResourceNotFoundException;
+import com.autocare.shared.security.SecurityUtils;
 import com.autocare.vehicle.entity.Vehicle;
 import com.autocare.vehicle.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +35,7 @@ public class ServiceOrderService {
     private final ClientService clientService;
     private final VehicleService vehicleService;
     private final MechanicService mechanicService;
+    private final MechanicRepository mechanicRepository;
 
     @Transactional
     public ServiceOrderResponseDTO create(ServiceOrderRequestDTO request) {
@@ -57,6 +63,7 @@ public class ServiceOrderService {
     @Transactional
     public ServiceOrderResponseDTO updateStatus(String id, StatusUpdateRequestDTO request) {
         ServiceOrder serviceOrder = findById(id);
+        assertCanAccessOrder(serviceOrder);
 
         validateStatusTransition(serviceOrder.getStatus(), request.getStatus());
 
@@ -89,7 +96,9 @@ public class ServiceOrderService {
     }
 
     public ServiceOrderResponseDTO findByIdResponse(String id) {
-        return toResponseDTO(findById(id));
+        ServiceOrder serviceOrder = findById(id);
+        assertCanAccessOrder(serviceOrder);
+        return toResponseDTO(serviceOrder);
     }
 
     public List<ServiceOrderResponseDTO> findAll() {
@@ -125,6 +134,30 @@ public class ServiceOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ordem de serviço não encontrada com ID: " + id));
     }
 
+    /**
+     * Restringe o acesso de um usuário MECHANIC apenas às ordens de serviço que lhe
+     * foram atribuídas — o controller libera a rota para o papel MECHANIC (ele precisa
+     * ver e diagnosticar suas OS), mas sem esta checagem qualquer mecânico logado
+     * conseguiria ler ou alterar a OS de qualquer colega. Outros papéis (ADMIN,
+     * MANAGER, RECEPTIONIST) não passam por essa restrição adicional.
+     */
+    private void assertCanAccessOrder(ServiceOrder serviceOrder) {
+        User currentUser = SecurityUtils.getCurrentUser();
+        if (currentUser.getRole() != Role.MECHANIC) {
+            return;
+        }
+
+        Mechanic mechanic = mechanicRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new AccessDeniedException("Usuário não possui um perfil de mecânico vinculado"));
+
+        boolean isAssigned = serviceOrder.getMechanic() != null
+                && serviceOrder.getMechanic().getId().equals(mechanic.getId());
+
+        if (!isAssigned) {
+            throw new AccessDeniedException("Esta ordem de serviço não está atribuída a você");
+        }
+    }
+
     private void validateStatusTransition(ServiceOrderStatus current, ServiceOrderStatus newStatus) {
         if (current == newStatus) {
             return;
@@ -149,7 +182,9 @@ public class ServiceOrderService {
     private String generateOrderNumber() {
         String prefix = "OS";
         String year = String.valueOf(LocalDateTime.now().getYear());
-        String sequence = String.format("%06d", serviceOrderRepository.count() + 1);
+        // nextval() é atômico no Postgres: cada chamada concorrente recebe um valor
+        // diferente e garantido único, ao contrário de "count() + 1" (ver repository).
+        String sequence = String.format("%06d", serviceOrderRepository.nextOrderSequenceValue());
         return prefix + year + sequence;
     }
 

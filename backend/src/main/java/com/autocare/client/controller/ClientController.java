@@ -7,18 +7,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Leitura liberada para ADMIN, RECEPTIONIST e MANAGER (relatórios/dashboard). Escrita
+ * restrita a ADMIN e RECEPTIONIST, que são os papéis responsáveis pelo cadastro de
+ * clientes conforme a tabela de permissões do projeto.
+ */
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'MANAGER')")
 public class ClientController {
 
     private final ClientService clientService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<ClientResponseDTO> create(@Valid @RequestBody ClientRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.create(request));
     }
@@ -39,6 +47,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<ClientResponseDTO> update(
             @PathVariable String id,
             @Valid @RequestBody ClientRequestDTO request) {
@@ -46,6 +55,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> delete(@PathVariable String id) {
         clientService.delete(id);
@@ -53,6 +63,7 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}/activate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> activate(@PathVariable String id) {
         clientService.activate(id);
