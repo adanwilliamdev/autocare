@@ -25,11 +25,23 @@ frontend/   # Next.js App Router
 
 ## Como rodar
 
+### 0. Banco de dados (Postgres via Docker)
+
+Na raiz do projeto:
+
+```bash
+docker compose up -d
+```
+
+Isso sobe um Postgres em `localhost:5432` com usuário `postgres`, senha `postgres`
+e banco `autocare` — já batendo com o `DATABASE_URL` do `.env.example` do backend.
+(O backend e o frontend continuam rodando fora do Docker, direto com `npm`.)
+
 ### 1. Backend
 
 ```bash
 cd backend
-cp .env.example .env      # ajuste DATABASE_URL, JWT_SECRET, CORS_ALLOWED_ORIGINS
+cp .env.example .env      # já vem configurado para o Postgres do docker-compose
 npm install
 npx prisma migrate dev --name init
 npm run prisma:seed       # cria admin@autocare.com / admin123

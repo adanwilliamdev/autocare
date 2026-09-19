@@ -1,0 +1,24 @@
+# Sobe apenas o Postgres para desenvolvimento local. O backend (NestJS) e o
+# frontend (Next.js) continuam rodando fora do Docker, via npm run dev/start:dev,
+# apontando DATABASE_URL para localhost:5432 (porta publicada abaixo).
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: autocare-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: autocare
+    ports:
+      - "5432:5432"
+    volumes:
+      - autocare_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d autocare"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  autocare_pg_data:
