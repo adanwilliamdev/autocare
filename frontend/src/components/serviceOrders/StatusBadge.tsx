@@ -1,3 +1,5 @@
+"use client"
+
 import { ServiceOrderStatus } from '@/types/serviceOrder'
 
 const statusStyles: Record<ServiceOrderStatus, { bg: string; text: string; dot: string }> = {

@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import toast from 'react-hot-toast'
-import { useAuth } from '@/contexts/AuthContext'
-import { LoginCredentials } from '@/types/auth'
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import toast from "react-hot-toast"
+import { useAuth } from "@/contexts/AuthContext"
+import { LoginCredentials } from "@/types/auth"
 
 const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
 })
 
 type LoginFormData = z.infer<typeof loginSchema>
@@ -17,7 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter()
 
   const {
     register,
@@ -31,10 +33,10 @@ export default function Login() {
     setIsLoading(true)
     try {
       await login(data as LoginCredentials)
-      toast.success('Login realizado com sucesso!')
-      navigate('/')
+      toast.success("Login realizado com sucesso!")
+      router.push("/")
     } catch (error) {
-      toast.error('Email ou senha inválidos')
+      toast.error("Email ou senha inválidos")
     } finally {
       setIsLoading(false)
     }
@@ -48,8 +50,8 @@ export default function Login() {
           className="absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage:
-              'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-            backgroundSize: '28px 28px',
+              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+            backgroundSize: "28px 28px",
           }}
         />
         <div className="relative px-12 pt-14">
@@ -89,7 +91,7 @@ export default function Login() {
             <div>
               <label className="block text-sm font-medium text-graphite-700 mb-1.5">Email</label>
               <input
-                {...register('email')}
+                {...register("email")}
                 type="email"
                 placeholder="voce@oficina.com"
                 className="input-field"
@@ -101,7 +103,7 @@ export default function Login() {
             <div>
               <label className="block text-sm font-medium text-graphite-700 mb-1.5">Senha</label>
               <input
-                {...register('password')}
+                {...register("password")}
                 type="password"
                 placeholder="••••••••"
                 className="input-field"
@@ -116,7 +118,7 @@ export default function Login() {
               disabled={isLoading}
               className="btn-primary w-full mt-2"
             >
-              {isLoading ? 'Entrando...' : 'Entrar'}
+              {isLoading ? "Entrando..." : "Entrar"}
             </button>
           </form>
         </div>

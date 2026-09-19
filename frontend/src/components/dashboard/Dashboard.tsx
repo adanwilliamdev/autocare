@@ -1,12 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
-import { getDashboardStats } from '@/api/dashboard'
-import StatsCards from './StatsCards'
-import RevenueChart from './RevenueChart'
-import Layout from '@/components/common/Layout/Layout'
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { getDashboardStats } from "@/api/dashboard"
+import StatsCards from "./StatsCards"
+import RevenueChart from "./RevenueChart"
+import Layout from "@/components/common/Layout/Layout"
 
 export default function Dashboard() {
   const { data: stats, isLoading, error } = useQuery({
-    queryKey: ['dashboard'],
+    queryKey: ["dashboard"],
     queryFn: getDashboardStats,
     refetchInterval: 30000,
   })
@@ -39,13 +41,12 @@ export default function Dashboard() {
           <p className="text-graphite-500 mt-0.5">Visão geral da sua oficina</p>
         </div>
 
-        {/* Hero metric — the number that matters most gets the room to breathe */}
         <div className="card !p-7">
           <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
             <p className="text-sm font-medium text-graphite-500">Faturamento mensal</p>
           </div>
           <p className="text-4xl font-display font-semibold text-graphite-900 tabular-nums">
-            R$ {stats.monthlyRevenue?.toFixed(2) || '0,00'}
+            R$ {stats.monthlyRevenue?.toFixed(2) || "0,00"}
           </p>
           <div className="mt-5 -mx-1">
             <RevenueChart data={stats.monthlyRevenueChart} />

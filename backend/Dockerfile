@@ -1,26 +1,16 @@
-# --- Etapa 1: build com Maven + JDK 21 ---
-FROM eclipse-temurin:21-jdk-jammy AS build
-
+FROM node:20-alpine AS build
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npx prisma generate
+RUN npm run build
 
-# Instala o Maven (imagem eclipse-temurin não vem com ele)
-RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
-
-# Copia primeiro só o pom.xml para aproveitar cache de dependências
-COPY pom.xml .
-RUN mvn -B dependency:go-offline
-
-# Copia o restante do código e compila
-COPY src src
-RUN mvn -B clean package -DskipTests
-
-# --- Etapa 2: imagem final, só com JRE (menor e sem Maven/JDK) ---
-FROM eclipse-temurin:21-jre-jammy
-
+FROM node:20-alpine
 WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/prisma ./prisma
+COPY package*.json ./
 EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]
+CMD ["node", "dist/main"]

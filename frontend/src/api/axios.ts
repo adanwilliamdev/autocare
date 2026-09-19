@@ -1,18 +1,22 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { LoginResponse } from '@/types/auth'
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
+import { LoginResponse } from "@/types/auth"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 })
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token")
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
     return config
   },
@@ -31,20 +35,17 @@ interface RetriableRequestConfig extends InternalAxiosRequestConfig {
 let refreshPromise: Promise<string | null> | null = null
 
 async function attemptRefresh(): Promise<string | null> {
-  const storedRefreshToken = localStorage.getItem('refreshToken')
+  const storedRefreshToken = localStorage.getItem("refreshToken")
   if (!storedRefreshToken) {
     return null
   }
 
   if (!refreshPromise) {
     refreshPromise = axios
-      .post<LoginResponse>(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8080/api'}/auth/refresh`,
-        { refreshToken: storedRefreshToken }
-      )
+      .post<LoginResponse>(`${API_BASE_URL}/auth/refresh`, { refreshToken: storedRefreshToken })
       .then((response) => {
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('refreshToken', response.data.refreshToken)
+        localStorage.setItem("token", response.data.token)
+        localStorage.setItem("refreshToken", response.data.refreshToken)
         return response.data.token
       })
       .catch(() => null)
@@ -60,7 +61,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined
-    const isAuthEndpoint = originalRequest?.url?.startsWith('/auth/')
+    const isAuthEndpoint = originalRequest?.url?.startsWith("/auth/")
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true
@@ -73,11 +74,11 @@ api.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('refreshToken')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("token")
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("user")
+      window.location.href = "/login"
     }
 
     return Promise.reject(error)

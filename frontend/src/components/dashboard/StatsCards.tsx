@@ -1,3 +1,5 @@
+"use client"
+
 import { DashboardStats } from '@/types'
 import {
   UsersIcon,
