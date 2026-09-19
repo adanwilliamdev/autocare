@@ -1,148 +1,10 @@
 # 🚗 AutoCare
 
-### Sistema de gestão para oficinas automotivas
+Sistema completo de gestão para oficinas mecânicas, desenvolvido com arquitetura moderna e foco em **segurança, controle operacional e gerenciamento de ordens de serviço**.
 
-O **AutoCare** é uma aplicação web para gerenciamento de oficinas automotivas, desenvolvida com arquitetura moderna e foco em **segurança, controle de acesso, integridade de dados e organização operacional**.
+A aplicação permite administrar usuários, clientes, veículos, peças, estoque, orçamentos e ordens de serviço, com controle de acesso baseado em diferentes níveis de permissão.
 
-A plataforma centraliza processos como **ordens de serviço, orçamentos, clientes, veículos, estoque de peças e usuários**, oferecendo diferentes níveis de acesso conforme o papel de cada usuário.
-
----
-
-## ✨ Funcionalidades
-
-* 🔐 Autenticação com **JWT + Refresh Token**
-* 🔄 Rotação de Refresh Tokens
-* 👥 Controle de acesso baseado em papéis
-* 🧑‍💼 Gerenciamento de usuários por administradores
-* 📋 Gerenciamento de Ordens de Serviço
-* 🧾 Criação e gerenciamento de orçamentos
-* 🚗 Cadastro e gerenciamento de veículos
-* 👤 Cadastro e gerenciamento de clientes
-* 📦 Controle de estoque de peças
-* 📊 Auditoria de movimentações de estoque
-* 🔢 Numeração sequencial de Ordens de Serviço e Orçamentos
-* 🔒 Controle de concorrência no estoque
-* 🛡️ Proteção de rotas e operações por permissão
-* 📱 Interface responsiva
-
----
-
-## 👥 Controle de acesso
-
-O sistema possui quatro níveis de acesso:
-
-| Papel          | Acesso                               |
-| -------------- | ------------------------------------ |
-| `ADMIN`        | Acesso administrativo completo       |
-| `MANAGER`      | Operações de gerenciamento           |
-| `RECEPTIONIST` | Atendimento e operações de recepção  |
-| `MECHANIC`     | Acesso às próprias Ordens de Serviço |
-
-O cadastro público de usuários cria contas exclusivamente como `RECEPTIONIST`.
-
-A criação de usuários com papéis elevados é restrita a administradores através da API administrativa.
-
-### Regra específica para mecânicos
-
-Usuários com papel `MECHANIC` podem visualizar somente as **Ordens de Serviço atribuídas a eles**, garantindo isolamento dos dados entre os profissionais.
-
----
-
-## 🔐 Segurança
-
-A autenticação utiliza **JWT Access Tokens** combinados com **Refresh Tokens com rotação**.
-
-Principais mecanismos de segurança:
-
-* Autenticação baseada em JWT
-* Refresh Token com rotação
-* Controle de acesso baseado em papéis
-* Proteção de endpoints
-* Validação de permissões no backend
-* Auditoria baseada no usuário autenticado
-* Controle de concorrência no estoque
-* Prevenção de alterações realizadas em nome de outros usuários
-
-A auditoria das movimentações de estoque utiliza exclusivamente o **usuário autenticado**, evitando que o cliente informe ou manipule a identidade responsável pela operação.
-
----
-
-## 📦 Controle de estoque
-
-O gerenciamento de estoque utiliza **lock otimista** através do campo `version`.
-
-Operações como:
-
-```text
-add-stock
-remove-stock
-```
-
-validam a versão atual do registro antes de realizar a alteração.
-
-Em caso de concorrência, a atualização falha e a API retorna:
-
-```http
-409 Conflict
-```
-
-Isso evita problemas de **lost updates**, especialmente quando múltiplas operações modificam o mesmo item simultaneamente.
-
----
-
-## 🔢 Numeração das Ordens de Serviço
-
-Ordens de Serviço e Orçamentos possuem numeração controlada por um contador persistido no PostgreSQL.
-
-A geração do próximo número ocorre de forma **atômica dentro de uma transação**, garantindo que operações concorrentes não produzam números duplicados.
-
----
-
-## 🏗️ Arquitetura
-
-O projeto é organizado em duas aplicações principais:
-
-```text
-AutoCare/
-├── backend/
-│   ├── src/
-│   ├── prisma/
-│   └── ...
-│
-└── frontend/
-    ├── src/
-    └── ...
-```
-
-### Backend
-
-Responsável por:
-
-* Regras de negócio
-* Autenticação e autorização
-* Persistência de dados
-* Controle de estoque
-* Ordens de Serviço
-* Orçamentos
-* Gerenciamento de usuários
-* Auditoria
-* API REST
-
-### Frontend
-
-Responsável por:
-
-* Interface da aplicação
-* Navegação
-* Autenticação
-* Controle de acesso
-* Consumo da API
-* Gerenciamento de estado
-* Experiência do usuário
-
----
-
-## 🛠️ Tecnologias
+## 🛠️ Stack
 
 ### Frontend
 
@@ -152,7 +14,6 @@ Responsável por:
 * **Tailwind CSS**
 * **React Query**
 * **Axios**
-* **Next.js App Router**
 
 ### Backend
 
@@ -164,47 +25,117 @@ Responsável por:
 * **JWT**
 * **Swagger**
 
----
+### Infraestrutura
+
+* **Docker**
+* **Docker Compose**
+
+## ✨ Funcionalidades
+
+* 🔐 Autenticação com JWT e Refresh Token
+* 👥 Controle de acesso baseado em funções
+* 👤 Gerenciamento de usuários
+* 👨‍🔧 Gerenciamento de clientes e mecânicos
+* 🚘 Cadastro e gerenciamento de veículos
+* 📦 Controle de estoque de peças
+* 📋 Ordens de serviço
+* 💰 Orçamentos
+* 📊 Controle operacional
+* 📝 Auditoria de movimentações de estoque
+* 🔒 Controle de concorrência no estoque
+* 🔢 Numeração automática de ordens de serviço e orçamentos
+* 📱 Interface responsiva
+
+## 🔐 Perfis de acesso
+
+O sistema possui quatro níveis de acesso:
+
+| Perfil         | Descrição                                           |
+| -------------- | --------------------------------------------------- |
+| `ADMIN`        | Gerenciamento completo do sistema                   |
+| `MANAGER`      | Acesso às principais operações administrativas      |
+| `RECEPTIONIST` | Atendimento, clientes, veículos e ordens de serviço |
+| `MECHANIC`     | Acesso às ordens de serviço atribuídas ao mecânico  |
+
+Novos usuários são cadastrados inicialmente como `RECEPTIONIST`. A criação de usuários com permissões elevadas é restrita a administradores.
+
+## 🔒 Segurança
+
+A aplicação possui mecanismos para proteger operações críticas:
+
+* Autenticação baseada em **JWT**
+* Refresh Token com rotação
+* Controle de autorização por função
+* Auditoria de movimentações de estoque vinculada ao usuário autenticado
+* Lock otimista para evitar alterações simultâneas no estoque
+* Controle transacional para geração de identificadores
+* Restrição de acesso às ordens de serviço conforme o perfil do usuário
+
+## 📁 Estrutura do projeto
+
+```text
+autocare/
+├── backend/
+│   ├── src/
+│   ├── prisma/
+│   └── ...
+│
+├── frontend/
+│   ├── src/
+│   └── ...
+│
+├── docker-compose.yml
+└── README.md
+```
 
 ## 🚀 Como executar
 
 ### Pré-requisitos
 
+Antes de iniciar, certifique-se de possuir:
+
 * Node.js
 * npm
-* PostgreSQL
+* Docker
+* Docker Compose
 
-### 0. Banco de dados (Postgres via Docker)
+### 1. Banco de dados
 
-Na raiz do projeto:
+Na raiz do projeto, execute:
 
 ```bash
 docker compose up -d
 ```
 
-Isso sobe um Postgres em `localhost:5432` com usuário `postgres`, senha `postgres`
-e banco `autocare` — já batendo com o `DATABASE_URL` do `.env.example` do backend.
-(O backend e o frontend continuam rodando fora do Docker, direto com `npm`.)
+Isso iniciará o PostgreSQL na porta `5432`.
 
-### 1. Backend
+Configuração padrão:
+
+```text
+Host: localhost
+Port: 5432
+Database: autocare
+User: postgres
+Password: postgres
+```
+
+### 2. Backend
+
+Entre no diretório do backend:
 
 ```bash
 cd backend
-cp .env.example .env      # já vem configurado para o Postgres do docker-compose
+```
 
 Configure as variáveis de ambiente:
 
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/autocare"
-JWT_SECRET="your-secret"
-CORS_ALLOWED_ORIGINS="http://localhost:3000"
+```bash
+cp .env.example .env
 ```
 
 Instale as dependências:
 
 ```bash
-npm install
-```
 npm install
 ```
 
@@ -214,7 +145,7 @@ Execute as migrations:
 npx prisma migrate dev --name init
 ```
 
-Popule o banco com os dados iniciais:
+Execute o seed:
 
 ```bash
 npm run prisma:seed
@@ -232,27 +163,24 @@ A API estará disponível em:
 http://localhost:8080/api
 ```
 
-### Swagger
-
-A documentação da API está disponível em:
+A documentação da API pode ser acessada pelo Swagger em:
 
 ```text
-http://localhost:8080/swagger-ui
+http://localhost:8080/api/swagger-ui
 ```
 
----
+### 3. Frontend
 
-### 2. Frontend
+Em outro terminal:
 
 ```bash
 cd frontend
-cp .env.example .env.local
 ```
 
-Configure:
+Configure as variáveis de ambiente:
 
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
+```bash
+cp .env.example .env.local
 ```
 
 Instale as dependências:
@@ -261,98 +189,57 @@ Instale as dependências:
 npm install
 ```
 
-Execute:
+Inicie a aplicação:
 
 ```bash
 npm run dev
 ```
 
-A aplicação estará disponível em:
+Acesse:
 
 ```text
 http://localhost:3000
 ```
 
----
+## 👤 Usuário de demonstração
 
-## 🔑 Usuário inicial
-
-O seed cria um usuário administrador para acesso inicial:
+O seed inicial cria um usuário administrador:
 
 ```text
-Email: admin@autocare.com
+E-mail: admin@autocare.com
 Senha: admin123
-Perfil: ADMIN
 ```
 
-> ⚠️ Para ambientes reais, altere a senha padrão e utilize credenciais armazenadas de forma segura.
+> ⚠️ Altere as credenciais padrão em ambientes de produção.
 
----
+## 📚 API
 
-## 📡 API
-
-A API segue uma arquitetura REST e possui endpoints organizados por domínio.
-
-Exemplos:
+A API possui documentação interativa através do **Swagger**, permitindo consultar endpoints, parâmetros, respostas e testar as operações diretamente pela interface.
 
 ```text
-/api/auth
-/api/users
-/api/customers
-/api/vehicles
-/api/parts
-/api/work-orders
-/api/quotes
+http://localhost:8080/api/swagger-ui
 ```
 
-A documentação completa dos endpoints pode ser consultada através do Swagger.
+## 🧠 Destaques técnicos
 
----
+### Controle de concorrência
 
-## 📌 Principais decisões técnicas
+O gerenciamento de estoque utiliza **lock otimista**, evitando que alterações simultâneas sobrescrevam dados incorretamente.
 
-### AuthGuard
+### Operações transacionais
 
-O frontend utiliza um `AuthGuard` para proteger páginas e controlar o redirecionamento conforme o estado de autenticação e o papel do usuário.
+Operações críticas utilizam transações para garantir consistência dos dados, incluindo a geração sequencial de ordens de serviço e orçamentos.
 
-### React Query
+### Autorização por função
 
-O gerenciamento das requisições à API utiliza **React Query**, permitindo controle de:
+As permissões são aplicadas de acordo com o perfil autenticado, garantindo que cada usuário tenha acesso somente às operações permitidas para sua função.
 
-* Cache
-* Estados de carregamento
-* Refetch
-* Invalidação de dados
-* Tratamento de requisições assíncronas
+## 📌 Status
 
-### Prisma
+🚧 Projeto em desenvolvimento.
 
-O Prisma é utilizado como ORM para acesso ao PostgreSQL, incluindo transações para operações que exigem consistência entre múltiplas alterações.
-
-### Transações
-
-Operações críticas, como geração de identificadores e movimentações de estoque, utilizam transações para preservar a integridade dos dados.
-
----
-
-## 📈 Objetivos técnicos
-
-O projeto foi desenvolvido com foco em práticas comuns no desenvolvimento de aplicações backend profissionais:
-
-* Arquitetura modular
-* Separação de responsabilidades
-* API REST
-* Autenticação e autorização
-* Controle de concorrência
-* Transações
-* Integridade de dados
-* Auditoria
-* Validação de dados
-* Documentação de API
-* Controle de acesso baseado em papéis
-
----
+O sistema está estruturado para evolução contínua, permitindo a inclusão de novos módulos, funcionalidades e integrações.
 
 ## 📄 Licença
 
-Este projeto está disponível sob a licença **MIT**.
+Este projeto está disponível sob a licença definida no repositório.
