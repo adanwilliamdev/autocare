@@ -1,16 +1,18 @@
-FROM node:20-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npx prisma generate
-RUN npm run build
+FROM python:3.12-slim
 
-FROM node:20-alpine
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/prisma ./prisma
-COPY package*.json ./
+
+COPY pyproject.toml ./
+COPY app ./app
+RUN pip install --no-cache-dir .
+COPY alembic.ini ./
+COPY alembic ./alembic
+
+RUN useradd --create-home appuser && chown -R appuser /app
+USER appuser
+
 EXPOSE 8080
-CMD ["node", "dist/main"]
+# Aplica as migrations e sobe a API. Com várias réplicas, rode `alembic upgrade head`
+# como um job separado em vez de em cada container.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]

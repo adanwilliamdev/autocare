@@ -1,6 +1,7 @@
-# Sobe apenas o Postgres para desenvolvimento local. O backend (NestJS) e o
-# frontend (Next.js) continuam rodando fora do Docker, via npm run dev/start:dev,
-# apontando DATABASE_URL para localhost:5432 (porta publicada abaixo).
+# Stack completa: PostgreSQL + Redis + API (FastAPI) + Web (Next.js).
+#   docker compose up -d --build
+# Para desenvolvimento, suba só a infraestrutura e rode API/web fora do Docker:
+#   docker compose up -d postgres redis
 services:
   postgres:
     image: postgres:16-alpine
@@ -19,6 +20,47 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: autocare-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./backend
+    container_name: autocare-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/autocare
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo-em-producao-para-uma-string-longa-e-aleatoria}
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "8080:8080"
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080/api
+    container_name: autocare-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
 
 volumes:
   autocare_pg_data:

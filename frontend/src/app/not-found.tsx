@@ -3,8 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
-// Equivalente ao <Route path="*" element={<Navigate to="/" />} /> do React Router
-// original: qualquer rota desconhecida volta para a home.
+// Qualquer rota desconhecida volta para a home (o AppShell então leva cada papel à sua página).
 export default function NotFound() {
   const router = useRouter()
 

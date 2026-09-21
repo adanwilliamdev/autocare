@@ -1,4 +1,7 @@
 import type { Metadata } from "next"
+import "@fontsource-variable/inter"
+import "@fontsource-variable/space-grotesk"
+import "@fontsource-variable/jetbrains-mono"
 import "./globals.css"
 import Providers from "./providers"
 
